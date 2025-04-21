@@ -15,17 +15,26 @@ namespace BookStore.Models
     public bool IsAdmin { get; set; }
     public int SuccessfulOrders { get; set; }
  public List<Bookmark> Bookmarks { get; set; } = new List<Bookmark>(); // Initialize with an empty list
+ 
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 }
 
    public class Bookmark
     {
         public int Id { get; set; }  // Primary key for Bookmark
         public required string Title { get; set; }  // Add properties for the bookmark
+          public string MembershipId { get; set; }
         public required string URL { get; set; }  // URL of the bookmarked page
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;  // Date the bookmark was created
         public int UserId { get; set; }  // Foreign key to the User
 
         // Navigation property for the associated User
+        
         public required User User { get; set; }  
+       // Navigation property to CartItems
+
+            
+    // 🏷️ Bookmarked book IDs
+    public ICollection<int> Bookmarks { get; set; } = new List<int>();
     }
 }

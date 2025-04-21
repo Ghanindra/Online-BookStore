@@ -1,5 +1,58 @@
-using System;
-using System.Collections.Generic;
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Threading.Tasks;
+// using BookStore.Data;
+// using Microsoft.AspNetCore.Mvc;
+// using Microsoft.EntityFrameworkCore;
+
+// namespace BookStore.Controllers
+// {
+//    [ApiController]
+// [Route("api/[controller]")]
+// public class BooksController : ControllerBase
+// {
+//     private readonly ApplicationDbContext _context;
+
+//     public BooksController(ApplicationDbContext context)
+//     {
+//         _context = context;
+//     }
+
+//     [HttpGet]
+//     public async Task<IActionResult> GetBooks(string? title, string? author, string? genre, string? format, 
+//         decimal? minPrice, decimal? maxPrice, string? sortBy)
+//     {
+//         var query = _context.Books.AsQueryable();
+
+//         if (!string.IsNullOrEmpty(title))
+//             query = query.Where(b => b.Title.Contains(title));
+//         if (!string.IsNullOrEmpty(author))
+//             query = query.Where(b => b.Author.Contains(author));
+//         if (!string.IsNullOrEmpty(genre))
+//             query = query.Where(b => b.Genre == genre);
+//         if (!string.IsNullOrEmpty(format))
+//             query = query.Where(b => b.Format == format);
+//         if (minPrice.HasValue)
+//             query = query.Where(b => b.Price >= minPrice.Value);
+//         if (maxPrice.HasValue)
+//             query = query.Where(b => b.Price <= maxPrice.Value);
+
+//         query = sortBy switch
+//         {
+//             "price" => query.OrderBy(b => b.Price),
+//             "title" => query.OrderBy(b => b.Title),
+//             "popularity" => query.OrderByDescending(b => b.Reviews.Count),
+//             _ => query
+//         };
+
+//         var books = await query.ToListAsync();
+//         return Ok(books);
+//     }
+// }
+
+// }
+
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Data;
@@ -8,47 +61,117 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Controllers
 {
-   [ApiController]
-[Route("api/[controller]")]
-public class BooksController : ControllerBase
-{
-    private readonly ApplicationDbContext _context;
-
-    public BooksController(ApplicationDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class BooksController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [HttpGet]
-    public async Task<IActionResult> GetBooks(string? title, string? author, string? genre, string? format, 
-        decimal? minPrice, decimal? maxPrice, string? sortBy)
-    {
-        var query = _context.Books.AsQueryable();
-
-        if (!string.IsNullOrEmpty(title))
-            query = query.Where(b => b.Title.Contains(title));
-        if (!string.IsNullOrEmpty(author))
-            query = query.Where(b => b.Author.Contains(author));
-        if (!string.IsNullOrEmpty(genre))
-            query = query.Where(b => b.Genre == genre);
-        if (!string.IsNullOrEmpty(format))
-            query = query.Where(b => b.Format == format);
-        if (minPrice.HasValue)
-            query = query.Where(b => b.Price >= minPrice.Value);
-        if (maxPrice.HasValue)
-            query = query.Where(b => b.Price <= maxPrice.Value);
-
-        query = sortBy switch
+        public BooksController(ApplicationDbContext context)
         {
-            "price" => query.OrderBy(b => b.Price),
-            "title" => query.OrderBy(b => b.Title),
-            "popularity" => query.OrderByDescending(b => b.Reviews.Count),
-            _ => query
-        };
+            _context = context;
+        }
 
-        var books = await query.ToListAsync();
-        return Ok(books);
+        // GET: api/books?title=abc&author=xyz&minPrice=10&sortBy=price
+        [HttpGet]
+        public async Task<IActionResult> GetBooks(
+            string? title,
+            string? author,
+            string? genre,
+            string? format,
+            decimal? minPrice,
+            decimal? maxPrice,
+            string? sortBy
+        )
+        {
+            var query = _context.Books
+                .Include(b => b.Reviews)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(title))
+                query = query.Where(b => b.Title.Contains(title));
+
+            if (!string.IsNullOrEmpty(author))
+                query = query.Where(b => b.Author.Contains(author));
+
+            if (!string.IsNullOrEmpty(genre))
+                query = query.Where(b => b.Genre == genre);
+
+            if (!string.IsNullOrEmpty(format))
+                query = query.Where(b => b.Format == format);
+
+            if (minPrice.HasValue)
+                query = query.Where(b => b.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                query = query.Where(b => b.Price <= maxPrice.Value);
+
+            query = sortBy switch
+            {
+                "price" => query.OrderBy(b => b.Price),
+                "title" => query.OrderBy(b => b.Title),
+                "popularity" => query.OrderByDescending(b => b.Reviews.Count),
+                _ => query
+            };
+
+            var books = await query.ToListAsync();
+            return Ok(books);
+        }
+   
+        // GET: api/books/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBookById(int id)
+        {
+            var book = await _context.Books
+                .Include(b => b.Reviews)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+                return NotFound("Book not found.");
+
+            return Ok(book);
+        }
+        [HttpGet("filter")]
+public async Task<IActionResult> FilterBooks(string? category)
+{
+    var now = DateTime.UtcNow;
+    var query = _context.Books.Include(b => b.Reviews).AsQueryable();
+
+    switch (category?.ToLower())
+    {
+        case "bestsellers":
+            query = query.OrderByDescending(b => b.SalesCount); // Assume you have a SalesCount field
+            break;
+
+        case "awardwinners":
+            query = query.Where(b => b.HasAwards == true); // Assume you have a HasAwards field
+            break;
+
+        case "newreleases":
+            query = query.Where(b => b.PublicationDate >= now.AddMonths(-3));
+            break;
+
+        case "newarrivals":
+            query = query.Where(b => b.CreatedAt >= now.AddMonths(-1)); // when book was added to system
+            break;
+
+        case "comingsoon":
+            query = query.Where(b => b.PublicationDate > now);
+            break;
+
+        case "deals":
+            query = query.Where(b => b.DiscountPrice > 0); // Assume discount field
+            break;
+
+        case "all":
+        default:
+            // no filters applied
+            break;
     }
+
+    var books = await query.ToListAsync();
+    return Ok(books);
 }
 
+    }
 }

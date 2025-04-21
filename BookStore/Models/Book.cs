@@ -24,9 +24,14 @@ namespace BookStore.Models
     public decimal? DiscountPrice { get; set; }
     public DateTime? SaleStart { get; set; }
     public DateTime? SaleEnd { get; set; }
+    public int SalesCount { get; set; }      // For Bestsellers
+public bool HasAwards { get; set; }      // For Award Winners
+public DateTime CreatedAt { get; set; }  // For New Arrivals
     public  ICollection<Review>? Reviews { get; set; }
+    // Navigation property to CartItems
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
        // Navigation property to Orders
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
-public ICollection<OrderBook> OrderBooks { get; set; }  // <-- Properly defined collection    }
+    public ICollection<Order>? Orders { get; set; } = new List<Order>();
+public ICollection<OrderBook>? OrderBooks { get; set; }  // <-- Properly defined collection    }
 }
 }
