@@ -1,5 +1,5 @@
 /* Modern Login Form Styling */
-form {
+.formed {
     max-width: 400px;
     margin: 2rem auto;
     padding: 2rem;
@@ -10,8 +10,8 @@ form {
       "Helvetica Neue", sans-serif;
   }
   
-  form input[type="email"],
-  form input[type="password"] {
+  .formed input[type="email"],
+  .formed input[type="password"] {
     display: block;
     width: 100%;
     margin-bottom: 1rem;
@@ -23,20 +23,20 @@ form {
     background-color: #f8fafc;
   }
   
-  form input[type="email"]:focus,
-  form input[type="password"]:focus {
+  .formed input[type="email"]:focus,
+  .formed input[type="password"]:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
     background-color: white;
   }
   
-  form input[type="email"]::placeholder,
-  form input[type="password"]::placeholder {
+  .formed input[type="email"]::placeholder,
+ .formed input[type="password"]::placeholder {
     color: #94a3b8;
   }
   
-  form button[type="submit"] {
+  .formed button[type="submit"] {
     display: block;
     width: 100%;
     padding: 0.75rem;
@@ -51,17 +51,17 @@ form {
     margin-top: 1.5rem;
   }
   
-  form button[type="submit"]:hover {
+  .formed button[type="submit"]:hover {
     background-color: #2563eb;
   }
   
-  form button[type="submit"]:focus {
+  .formed button[type="submit"]:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
   }
   
   /* Add a title to the form */
-  form::before {
+  .formed::before {
     content: "Welcome Back";
     display: block;
     font-size: 1.5rem;
@@ -72,7 +72,7 @@ form {
   }
   
   /* Add a subtitle */
-  form::after {
+  .formed::after {
     content: "Enter your credentials to access your account";
     display: block;
     font-size: 0.9rem;

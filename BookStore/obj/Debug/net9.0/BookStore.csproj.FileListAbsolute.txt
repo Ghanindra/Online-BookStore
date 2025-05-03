@@ -170,3 +170,4 @@ D:\BookStore\BookStore\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspace
 D:\BookStore\BookStore\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 D:\BookStore\BookStore\bin\Debug\net9.0\Frontend\client\package-lock.json
 D:\BookStore\BookStore\bin\Debug\net9.0\Frontend\client\package.json
+D:\BookStore\BookStore\bin\Debug\net9.0\BookStore.staticwebassets.runtime.json

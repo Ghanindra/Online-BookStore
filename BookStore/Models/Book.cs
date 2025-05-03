@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BookStore.Models
@@ -8,6 +10,7 @@ namespace BookStore.Models
    public class Book
 {
     public int Id { get; set; }
+    [Required]
     public  string? Title { get; set; }
     public  string ?ISBN { get; set; }
     public  string? Author { get; set; }
@@ -27,9 +30,13 @@ namespace BookStore.Models
     public int SalesCount { get; set; }      // For Bestsellers
 public bool HasAwards { get; set; }      // For Award Winners
 public DateTime CreatedAt { get; set; }  // For New Arrivals
+ public bool InStock { get; set; }
+    public bool IsPhysicalAccessAvailable { get; set; }
+    public string? ImageUrl { get; set; }
     public  ICollection<Review>? Reviews { get; set; }
     // Navigation property to CartItems
-        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+    [JsonIgnore]
+    public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
        // Navigation property to Orders
     public ICollection<Order>? Orders { get; set; } = new List<Order>();
 public ICollection<OrderBook>? OrderBooks { get; set; }  // <-- Properly defined collection    }

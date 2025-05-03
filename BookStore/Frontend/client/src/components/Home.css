@@ -1,364 +1,347 @@
-/* Modern Book Store Styling */
-:root {
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
-    --secondary-color: #f97316;
-    --text-color: #1e293b;
-    --light-text: #64748b;
-    --background: #f8fafc;
-    --card-bg: #ffffff;
-    --border-color: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --radius: 8px;
-  }
-  
-  body {
-    background-color: var(--background);
-    color: var(--text-color);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-      "Helvetica Neue", sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .homepage-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  
+/* Main Container Styles */
+.homepage-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f7f4;
+  color: #333;
+}
+
+.homepage-title {
+  text-align: center;
+  color: #5d4037;
+  margin-bottom: 40px;
+  font-size: 3.2rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.homepage-title:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, #8d6e63, #a1887f);
+}
+
+/* View Toggle Styles */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 50px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.view-button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  background-color: transparent;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: #8d6e63;
+}
+
+.view-button.active {
+  background-color: #8d6e63;
+  color: white;
+  box-shadow: 0 2px 8px rgba(141, 110, 99, 0.4);
+}
+
+.view-button:hover:not(.active) {
+  background-color: #f5f0ec;
+}
+
+/* Section Styles */
+.section {
+  margin-bottom: 60px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.section:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, #8d6e63, #a1887f);
+}
+
+.section h2 {
+  color: #5d4037;
+  border-bottom: none;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  position: relative;
+}
+
+.section h2:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #8d6e63;
+}
+
+/* Grid View Styles */
+.kitabs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.kitab-card {
+  border: none;
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.kitab-card:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #8d6e63, #a1887f);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.kitab-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.kitab-card:hover:after {
+  transform: scaleX(1);
+}
+
+.kitab-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #5d4037;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.kitab-card h2:after {
+  display: none;
+}
+
+.kitab-card p {
+  margin: 8px 0;
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+
+.discount-price {
+  color: #d32f2f;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+.kitab-award {
+  display: inline-block;
+  background-color: #ffd54f;
+  color: #5d4037;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.kitab-card button {
+  margin-top: auto;
+  padding: 10px 18px;
+  background-color: #8d6e63;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(141, 110, 99, 0.3);
+}
+
+.kitab-card button:hover {
+  background-color: #6d4c41;
+  box-shadow: 0 5px 12px rgba(109, 76, 65, 0.4);
+  transform: translateY(-2px);
+}
+
+/* List View Styles */
+.kitab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.kitab-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 25px;
+  border: none;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kitab-list-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.kitab-list-price {
+  font-weight: bold;
+  color: #5d4037;
+  font-size: 1.1rem;
+}
+
+.kitab-list-discount {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.add-to-cart-btn {
+  padding: 10px 18px;
+  background-color: #8d6e63;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(141, 110, 99, 0.3);
+}
+
+.add-to-cart-btn:hover {
+  background-color: #6d4c41;
+  box-shadow: 0 5px 12px rgba(109, 76, 65, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Loading State */
+.loading-text {
+  text-align: center;
+  color: #8d6e63;
+  font-style: italic;
+  padding: 30px;
+  font-size: 1.1rem;
+  background-color: rgba(141, 110, 99, 0.05);
+  border-radius: 8px;
+}
+
+/* Author List */
+.author-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.author-list li {
+  padding: 15px;
+  background-color: #f9f7f4;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  text-align: center;
+  font-weight: 500;
+  color: #5d4037;
+}
+
+.author-list li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .homepage-title {
     font-size: 2.5rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--primary-color);
-    position: relative;
-    padding-bottom: 0.5rem;
   }
-  
-  .homepage-title::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    border-radius: 2px;
+
+  .kitabs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
-  
-  /* Top Bar Styling */
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  
-  .category-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .category-button {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--light-text);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
-  }
-  
-  .category-button:hover {
-    background-color: rgba(99, 102, 241, 0.1);
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-  }
-  
-  .category-button.active {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-  }
-  
-  .view-toggle {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .view-button {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--light-text);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
-  }
-  
-  .view-button:hover {
-    background-color: rgba(99, 102, 241, 0.1);
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-  }
-  
-  .view-button.active {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-  }
-  
-  /* Loading and No Books States */
-  .loading-text,
-  .no-books {
-    text-align: center;
-    font-size: 1.2rem;
-    color: var(--light-text);
-    padding: 3rem 0;
-  }
-  
-  .loading-text::after {
-    content: "";
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid var(--primary-color);
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spin 1s linear infinite;
-    margin-left: 0.5rem;
-    vertical-align: middle;
-  }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  /* Grid View Styling */
-  .books-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-  }
-  
-  .book-card {
-    background-color: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .book-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  }
-  
-  .book-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .book-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-  }
-  
-  .book-author {
-    font-size: 0.9rem;
-    color: var(--light-text);
-    margin-bottom: 0.75rem;
-  }
-  
-  .book-genre {
-    display: inline-block;
-    font-size: 0.8rem;
-    background-color: rgba(99, 102, 241, 0.1);
-    color: var(--primary-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 20px;
-    margin-bottom: 1rem;
-  }
-  
-  .book-price {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin-bottom: 0.25rem;
-  }
-  
-  .book-discount {
-    font-size: 0.9rem;
-    color: var(--secondary-color);
-    font-weight: 600;
-  }
-  
-  .book-award {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: rgba(249, 115, 22, 0.1);
-    color: var(--secondary-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-  }
-  
-  /* List View Styling */
-  .book-list {
-    display: flex;
+
+  .kitab-list-item {
     flex-direction: column;
-    gap: 1rem;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
   }
-  
-  .book-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1rem 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  .kitab-list-item button {
+    align-self: stretch;
+    text-align: center;
   }
-  
-  .book-list-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+
+  .section {
+    padding: 25px 20px;
   }
-  
-  .book-list-price {
-    font-weight: 700;
-    color: var(--text-color);
+}
+
+@media (max-width: 480px) {
+  .homepage-title {
+    font-size: 2rem;
   }
-  
-  .book-list-discount {
-    color: var(--secondary-color);
-    font-weight: 600;
+
+  .kitabs-grid {
+    grid-template-columns: 1fr;
   }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .top-bar {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .category-buttons {
-      width: 100%;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-      -webkit-overflow-scrolling: touch;
-    }
-  
-    .books-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1.5rem;
-    }
-  
-    .book-list-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
+
+  .section h2 {
+    font-size: 1.5rem;
   }
-  
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .book-card,
-  .book-list-item {
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-  
-  .books-grid .book-card:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  .books-grid .book-card:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  .books-grid .book-card:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-  .books-grid .book-card:nth-child(4) {
-    animation-delay: 0.4s;
-  }
-  .books-grid .book-card:nth-child(5) {
-    animation-delay: 0.5s;
-  }
-  .books-grid .book-card:nth-child(6) {
-    animation-delay: 0.6s;
-  }
-  
-  .book-list .book-list-item:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  .book-list .book-list-item:nth-child(2) {
-    animation-delay: 0.15s;
-  }
-  .book-list .book-list-item:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-  .book-list .book-list-item:nth-child(4) {
-    animation-delay: 0.25s;
-  }
-  .book-list .book-list-item:nth-child(5) {
-    animation-delay: 0.3s;
-  }
-  .book-list .book-list-item:nth-child(6) {
-    animation-delay: 0.35s;
-  }
-  
-  /* Add a cool hover effect for book cards */
-  .book-card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
+
+  .view-toggle {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.8) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    transform: translateX(-100%);
-    transition: transform 0.6s;
-    pointer-events: none;
   }
-  
-  .book-card:hover::after {
-    transform: translateX(100%);
-  }
-  
+}
+
+/* Add a subtle pattern to the background for more visual interest */
+body {
+  background-color: #f9f7f4;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a1887f' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+}

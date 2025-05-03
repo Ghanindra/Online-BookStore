@@ -15,59 +15,172 @@ namespace BookStore.Controllers
 public class AdminController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+        private object dto;
 
-    public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    [HttpPost("book")]
-public async Task<IActionResult> AddBook(Book book)
-{
-    book.SaleStart = ConvertToUtc(book.SaleStart);
-    book.SaleEnd = ConvertToUtc(book.SaleEnd);
+//     [HttpPost("book")]
+//     [Consumes("multipart/form-data")]
+// public async Task<IActionResult> AddBook([FromForm]Book book,[FromForm] IFormFile image)
+// {
+//     book.SaleStart = ConvertToUtc(book.SaleStart);
+//     book.SaleEnd = ConvertToUtc(book.SaleEnd);
 
-    _context.Books.Add(book);
-    await _context.SaveChangesAsync();
-    return Ok(book);
-}
+//     // Handle image upload
+//     string imagePath = null;
+//     if (book.ImageUrl != null && book.ImageUrl.Length > 0)
+//     {
+//         var uploadsFolder = Path.Combine("wwwroot", "images");
+//         if (!Directory.Exists(uploadsFolder))
+//         {
+//             Directory.CreateDirectory(uploadsFolder);
+//         }
 
-      private DateTime? ConvertToUtc(DateTime? dateTime)
-{
-    if (dateTime == null) return null;
+//         var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+//         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-    // If the DateTime is unspecified, assume it's local and convert to UTC.
-    if (dateTime.Value.Kind == DateTimeKind.Unspecified)
+//         using (var stream = new FileStream(filePath, FileMode.Create))
+//         {
+//             await book.ImageUrl.CopyToAsync(stream);
+//         }
+
+//         imagePath = $"/images/{uniqueFileName}";
+//     }
+
+//     _context.Books.Add(book);
+//     await _context.SaveChangesAsync();
+//     return Ok(book);
+// }
+
+//       private DateTime? ConvertToUtc(DateTime? dateTime)
+// {
+//     if (dateTime == null) return null;
+
+//     // If the DateTime is unspecified, assume it's local and convert to UTC.
+//     if (dateTime.Value.Kind == DateTimeKind.Unspecified)
+//     {
+//         return DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Local).ToUniversalTime();
+//     }
+
+//     // If it's already UTC, return as is
+//     if (dateTime.Value.Kind == DateTimeKind.Utc)
+//         return dateTime;
+
+//     // Otherwise, treat as local time and convert to UTC
+//     return dateTime.Value.ToUniversalTime();
+// }
+
+//         [HttpPut("book/{id}")]
+// public async Task<IActionResult> UpdateBook(int id, Book updated)
+// {
+//     var book = await _context.Books.FindAsync(id);
+//     if (book == null) return NotFound();
+
+//     book.Title = updated.Title;
+//     book.Price = updated.Price;
+//     book.Stock = updated.Stock;
+//     book.IsOnSale = updated.IsOnSale;
+//     book.DiscountPrice = updated.DiscountPrice;
+//     book.SaleStart = ConvertToUtc(updated.SaleStart);
+//     book.SaleEnd = ConvertToUtc(updated.SaleEnd);
+
+//     await _context.SaveChangesAsync();
+//     return Ok(book);
+// }
+
+
+//     [HttpDelete("book/{id}")]
+//     public async Task<IActionResult> DeleteBook(int id)
+//     {
+//         var book = await _context.Books.FindAsync(id);
+//         if (book == null) return NotFound();
+
+//         _context.Books.Remove(book);
+//         await _context.SaveChangesAsync();
+//         return Ok("Deleted.");
+//     }
+// }
+ [HttpPost("book")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> AddBook([FromForm] Book book, [FromForm] IFormFile image)
     {
-        return DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Local).ToUniversalTime();
+        book.SaleStart = ConvertToUtc(book.SaleStart);
+        book.SaleEnd = ConvertToUtc(book.SaleEnd);
+        if (!ModelState.IsValid)
+{
+    return BadRequest(ModelState); // Returns what field is missing or failed validation
+}
+if (string.IsNullOrEmpty(book.Language))
+{
+    book.Language = "English";  // Default value or handle accordingly
+}
+        // Handle image upload
+        if (image != null && image.Length > 0)
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+            
+            // Create folder if it doesn't exist
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            // Generate a unique file name and save the image
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            // Set the file path to the book's ImageUrl
+            book.ImageUrl = $"/images/{uniqueFileName}";
+        }
+Console.WriteLine($"Language: {book.Language}");
+        // Save the book in the database
+        _context.Books.Add(book);
+        await _context.SaveChangesAsync();
+        
+        return Ok(book);
     }
 
-    // If it's already UTC, return as is
-    if (dateTime.Value.Kind == DateTimeKind.Utc)
-        return dateTime;
+    private DateTime? ConvertToUtc(DateTime? dateTime)
+    {
+        if (dateTime == null) return null;
 
-    // Otherwise, treat as local time and convert to UTC
-    return dateTime.Value.ToUniversalTime();
-}
+        if (dateTime.Value.Kind == DateTimeKind.Unspecified)
+        {
+            return DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Local).ToUniversalTime();
+        }
 
-        [HttpPut("book/{id}")]
-public async Task<IActionResult> UpdateBook(int id, Book updated)
-{
-    var book = await _context.Books.FindAsync(id);
-    if (book == null) return NotFound();
+        if (dateTime.Value.Kind == DateTimeKind.Utc)
+            return dateTime;
 
-    book.Title = updated.Title;
-    book.Price = updated.Price;
-    book.Stock = updated.Stock;
-    book.IsOnSale = updated.IsOnSale;
-    book.DiscountPrice = updated.DiscountPrice;
-    book.SaleStart = ConvertToUtc(updated.SaleStart);
-    book.SaleEnd = ConvertToUtc(updated.SaleEnd);
+        return dateTime.Value.ToUniversalTime();
+    }
 
-    await _context.SaveChangesAsync();
-    return Ok(book);
-}
+    [HttpPut("book/{id}")]
+    public async Task<IActionResult> UpdateBook(int id, Book updated)
+    {
+        var book = await _context.Books.FindAsync(id);
+        if (book == null) return NotFound();
 
+        book.Title = updated.Title;
+        book.Price = updated.Price;
+        book.Stock = updated.Stock;
+        book.IsOnSale = updated.IsOnSale;
+        book.DiscountPrice = updated.DiscountPrice;
+        book.SaleStart = ConvertToUtc(updated.SaleStart);
+        book.SaleEnd = ConvertToUtc(updated.SaleEnd);
+
+        await _context.SaveChangesAsync();
+        return Ok(book);
+    }
 
     [HttpDelete("book/{id}")]
     public async Task<IActionResult> DeleteBook(int id)
@@ -80,5 +193,4 @@ public async Task<IActionResult> UpdateBook(int id, Book updated)
         return Ok("Deleted.");
     }
 }
-
 }

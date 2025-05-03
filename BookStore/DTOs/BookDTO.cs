@@ -15,5 +15,6 @@ namespace BookStore.DTOs
         public string Description { get; set; } = string.Empty;
         public string Format { get; set; } = string.Empty;
         public decimal Price { get; set; }
+         public required IFormFile Image { get; set; }
     }
 }

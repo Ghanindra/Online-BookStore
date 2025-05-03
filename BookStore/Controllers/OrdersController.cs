@@ -23,6 +23,8 @@ namespace BookStore.Controllers
         private readonly IEmailService _emailService;
         private readonly ILogger<OrdersController> _logger;
 
+        public object MemberId { get; private set; }
+
         public OrdersController(ApplicationDbContext context, DiscountService discountService, IEmailService emailService, ILogger<OrdersController> logger)
         {
             _context = context;
@@ -32,7 +34,8 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PlaceOrder(List<int> bookIds)
+        // public async Task<IActionResult> PlaceOrder(List<int> bookIds)
+        public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
         {
             if (bookIds == null || !bookIds.Any())
             {
@@ -90,7 +93,7 @@ namespace BookStore.Controllers
                     await _context.SaveChangesAsync();
 
                     // Send confirmation email asynchronously
-                    var emailTask = _emailService.SendEmailAsync(user.Email, "Your Order Confirmation", $"Claim Code: {claimCode}\nTotal: {finalPrice:C}");
+                    var emailTask = _emailService.SendEmailAsync(user.Email, "Your Order Confirmation", $"Claim Code: {claimCode}\nTotal: {finalPrice:C}\nOrderId:{order.Id}\nMemberId:{order.MemberId}");
 
                     await transaction.CommitAsync();
 
@@ -145,5 +148,32 @@ namespace BookStore.Controllers
             _logger.LogInformation("Order canceled successfully. Order ID: {OrderId}", id);
             return Ok("Order canceled.");
         }
+
+       
+ [HttpGet("user")]
+public async Task<IActionResult> GetUserOrders()
+{
+    var userIdClaim = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+    {
+        _logger.LogWarning("Invalid or missing user ID.");
+        return Unauthorized("User not authenticated.");
+    }
+
+    var orders = await _context.Orders
+        .Include(o => o.Books)
+        .Where(o => o.UserId == userId)
+        .Select(o => new
+        {
+            o.Id,
+            o.ClaimCode,
+            o.FinalPrice,
+            o.IsCanceled,
+            BookTitles = o.Books.Select(b => b.Title).ToList()
+        })
+        .ToListAsync();
+
+    return Ok(orders);
+}
     }
 }

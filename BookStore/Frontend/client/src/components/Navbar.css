@@ -1,0 +1,155 @@
+/* Navbar Styles */
+.navbar {
+    background-color: #5d4037;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 70px;
+  }
+  
+  /* Logo Styles */
+  .navbar-logo {
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding: 5px 0;
+    white-space: nowrap;
+  }
+  
+  .navbar-logo:after {
+    content: "📚";
+    font-size: 1.2rem;
+    margin-left: 8px;
+    opacity: 0.9;
+  }
+  
+  .navbar-logo:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ffd54f;
+    transition: width 0.3s ease;
+  }
+  
+  .navbar-logo:hover:before {
+    width: 100%;
+  }
+  
+  
+  
+  /* Links Container */
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
+  
+  /* Navbar Items and Links */
+  .navbar-item {
+    position: relative;
+  }
+  
+  .navbar-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  .navbar-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Dropdown Styles */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px 0;
+    z-index: 1;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(10px);
+    }
+  }
+  
+  .dropdown-content .navbar-link {
+    color: #5d4037;
+    padding: 10px 20px;
+    display: block;
+    text-align: left;
+    transition: all 0.2s ease;
+    border-radius: 0;
+  }
+  
+  .dropdown-content .navbar-link:hover {
+    background-color: #f9f7f4;
+    padding-left: 25px;
+  }
+  
+  /* Button Styles */
+  .navbar-button {
+    background-color: #a1887f;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+  }
+  
+  .navbar-button:hover {
+    background-color: #8d6e63;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  

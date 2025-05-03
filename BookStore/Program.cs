@@ -67,7 +67,10 @@
 using BookStore.Data;
 using BookStore.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -96,6 +99,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<DiscountService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100MB, adjust as needed
+});
 // JWT Authentication Configuration
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(jwtKey))
@@ -124,13 +131,26 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+app.UseStaticFiles(); // Enables serving files from wwwroot by default
+
+// Optional: if you want to serve from a custom "images" folder:
+app.UseStaticFiles(); // Default static file serving for wwwroot
+
+// Optional: if you want to serve images from the wwwroot/images folder
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
+    RequestPath = "/images"
+});
+
 app.UseCors("AllowSpecificOrigin"); // Apply the specific CORS policy
 
 // Use Middleware
 app.UseHttpsRedirection();
 app.UseRouting(); // Make sure routing is enabled
-app.UseAuthentication(); // 🔐 must be before Authorization
+app.UseAuthentication(); //  must be before Authorization
 app.UseAuthorization(); // Enable authorization
-app.MapControllers(); // 🧭 Maps your API endpoints
+app.MapControllers(); //  Maps your API endpoints
 
-app.Run(); // 🚀 Starts the web application
+app.Run(); // Starts the web application

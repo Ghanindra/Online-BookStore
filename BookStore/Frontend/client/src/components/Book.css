@@ -1,0 +1,53 @@
+.search-results-container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  .search-results-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  
+  .book-result-card {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .book-result-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  }
+  
+  .book-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+  }
+  
+  .book-availability {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 5px;
+  }
+  
+  .available {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .unavailable {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  

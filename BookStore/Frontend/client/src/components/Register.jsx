@@ -32,7 +32,7 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="forms" onSubmit={handleSubmit}>
       <input name="fullName" placeholder="Full Name" onChange={handleChange} required />
       <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
       <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
