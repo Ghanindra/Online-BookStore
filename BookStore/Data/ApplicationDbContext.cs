@@ -26,6 +26,9 @@ public DbSet<Bookmarks> Bookmarks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Book>().ToTable("Books");
         modelBuilder.Entity<Order>().ToTable("Orders");
 
@@ -63,7 +66,12 @@ public DbSet<Bookmarks> Bookmarks { get; set; }
         .HasForeignKey(c => c.UserId);
 }
 }
-
+{
+    modelBuilder.Entity<BookOrder>()
+        .HasOne(bo => bo.Order)  // Relationship between BookOrder and Order
+        .WithMany()  // Adjust based on your actual relationship (could be WithOne if it's a one-to-one)
+        .HasForeignKey(bo => bo.OrderId);  // Use the correct foreign key property
+}
 
     modelBuilder.Entity<Bookmarks>()
     .HasOne(b => b.Book)
@@ -79,10 +87,37 @@ public DbSet<Bookmarks> Bookmarks { get; set; }
         .WithMany(o => o.BookOrders) // Adjust this if the relationship is one-to-one
         .HasForeignKey(bo => bo.OrderId); // Ensure this property exists
 
+ modelBuilder.Entity<Order>()
+        .HasMany(o => o.Books)
+        .WithMany(b => b.Orders);
+         // Define the relationship between Order and User
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.User)  // Order has one User
+            .WithMany()            // User can have many Orders (if needed, specify the collection)
+            .HasForeignKey(o => o.UserId);  // Foreign Key
 
-        base.OnModelCreating(modelBuilder);
     }
     
+}
+public static class DbInitializer
+{
+    public static void SeedUsers(ApplicationDbContext context)
+    {
+        if (!context.Users.Any(u => u.Email == "staff@bookstore.com"))
+        {
+            var staff = new User
+            {
+                Email = "staff@bookstore.com",
+                FullName = "Bookstore Staff",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Staff123"),
+                IsAdmin = false,
+                IsStaff = true
+            };
+
+            context.Users.Add(staff);
+            context.SaveChanges();
+        }
+    }
 }
 
 

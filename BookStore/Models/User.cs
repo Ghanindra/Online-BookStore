@@ -15,11 +15,15 @@ namespace BookStore.Models
     public required string FullName { get; set; }
     public string MembershipId { get; set; } = Guid.NewGuid().ToString().Substring(0, 8);
     public bool IsAdmin { get; set; }
+      public bool IsStaff { get; set; } // ✅ Add this
     public int SuccessfulOrders { get; set; }
  public List<Bookmarks> Bookmarks { get; set; } = new List<Bookmarks>(); // Initialize with an empty list
  
+    // Navigation property for Orders
+    public List<Order> Orders { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-}
+        // public object UserName { get; internal set; }
+    }
 
   //  public class Bookmark
   //   {

@@ -163,8 +163,28 @@ namespace BookStore.Controllers
             var user = _context.Users.SingleOrDefault(u => u.Email == dto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized("Invalid credentials.");
+                // Dynamically assign the role
+if (user.Email == "staff@bookstore.com")
+{
+    user.IsStaff = true; // Set IsStaff to true for this user
+    _context.SaveChanges(); // Save changes to the database
+}
 
-            var role = user.IsAdmin ? "Admin" : "User";  // Set the role based on user status
+            // var role = user.IsAdmin ? "Admin" : "User";  // Set the role based on user status
+    string role;
+
+if (user.IsAdmin)
+{
+    role = "Admin";
+}
+else if (user.IsStaff)
+{
+    role = "Staff";
+}
+else
+{
+    role = "User";
+}
 
             var token = GenerateJwt(user, role);
             // return Ok(new { message = "Login successful", token,role });

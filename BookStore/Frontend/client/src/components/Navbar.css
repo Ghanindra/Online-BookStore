@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  max-width: 1200px;
+  max-width:  1403px;
   margin: 0 auto;
 }
 
@@ -68,7 +68,7 @@
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 3.5rem;
 }
 
 .navbar-link {

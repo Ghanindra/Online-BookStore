@@ -30,15 +30,18 @@ console.log("userId",userId);
     // Store userId in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem('userId', userId); 
+      localStorage.setItem('role', role); 
       
   console.log('Saved userId:', localStorage.getItem('userId'));
       setIsAuthenticated(true);
 
       // Navigate based on admin status
-      if (role=="Admin") {
+      if (role==="Admin") {
         navigate("/admindashboard");
-      } else {
-        navigate("/");
+      } else if(role==="Staff") {
+        navigate("/staffportal");
+      }else{
+        navigate('/')
       }
     } catch (err) {
       toast.error(err.response?.data || "Login failed");
@@ -51,6 +54,7 @@ console.log("userId",userId);
         <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
         <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
         <button type="submit">Login</button>
+      
       </form>
       <ToastContainer />
     </>

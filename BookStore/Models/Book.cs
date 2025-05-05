@@ -37,6 +37,7 @@ public DateTime CreatedAt { get; set; }  // For New Arrivals
     public bool IsPhysicalAccessAvailable { get; set; }
     [MaxLength(1000)] // or use [StringLength(1000)]
     public string? ImageUrl { get; set; }
+    
     public  ICollection<Review>? Reviews { get; set; }
     // Navigation property to CartItems
     [JsonIgnore]

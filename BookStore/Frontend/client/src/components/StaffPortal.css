@@ -1,0 +1,250 @@
+/* StaffPortal.css */
+.staff-portal {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+  
+  .staff-portal__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #2a2a2a;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.75rem;
+  }
+  
+  .staff-portal__loading {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .staff-portal__error {
+    color: #e74c3c;
+    background-color: #fdf1f0;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #e74c3c;
+  }
+  
+  .staff-portal__search-form {
+    display: flex;
+    margin-bottom: 1.5rem;
+    gap: 0.5rem;
+  }
+  
+  .staff-portal__search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .staff-portal__search-input:focus {
+    outline: none;
+    border-color: #4a69bd;
+    box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.1);
+  }
+  
+  .staff-portal__search-button,
+  .staff-portal__clear-button {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .staff-portal__search-button {
+    background-color: #4a69bd;
+    color: white;
+  }
+  
+  .staff-portal__search-button:hover {
+    background-color: #3a5cbd;
+    transform: translateY(-2px);
+  }
+  
+  .staff-portal__clear-button {
+    background-color: #f0f0f0;
+    color: #555;
+  }
+  
+  .staff-portal__clear-button:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+  }
+  
+  .staff-portal__no-orders {
+    color: #7f8c8d;
+    font-style: italic;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+  }
+  
+  .staff-portal__table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .staff-portal__table-head {
+    background-color: #4a69bd;
+    color: white;
+  }
+  
+  .staff-portal__table-header {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  .staff-portal__table-body {
+    background-color: white;
+  }
+  
+  .staff-portal__table-row {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+  }
+  
+  .staff-portal__table-row:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .staff-portal__table-cell {
+    padding: 1rem;
+    vertical-align: top;
+  }
+  
+  .staff-portal__claim-code {
+    font-family: monospace;
+    font-weight: 600;
+    color: #4a69bd;
+  }
+  
+  .staff-portal__price {
+    font-weight: 600;
+  }
+  
+  .staff-portal__status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .staff-portal__status--active {
+    background-color: #e3f8e3;
+    color: #27ae60;
+  }
+  
+  .staff-portal__status--canceled {
+    background-color: #fde8e8;
+    color: #e74c3c;
+  }
+  
+  .staff-portal__book-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .staff-portal__book-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .staff-portal__book-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .staff-portal__book-image {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .staff-portal__book-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .staff-portal__book-title {
+    font-weight: 600;
+  }
+  
+  .staff-portal__book-author {
+    font-style: italic;
+  }
+  
+  .staff-portal__book-price {
+    color: #4a69bd;
+    font-weight: 500;
+  }
+  
+  .staff-portal__user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .staff-portal__user-name {
+    font-weight: 600;
+  }
+  
+  .staff-portal__user-email {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+  }
+  
+  .staff-portal__no-user {
+    color: #bdc3c7;
+    font-style: italic;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 992px) {
+    .staff-portal__table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .staff-portal {
+      padding: 1rem;
+    }
+    
+    .staff-portal__search-form {
+      flex-direction: column;
+    }
+    
+    .staff-portal__search-button,
+    .staff-portal__clear-button {
+      width: 100%;
+    }
+  }

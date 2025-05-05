@@ -78,6 +78,11 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.UseStaticFiles(); // Enables serving files from wwwroot by default
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    DbInitializer.SeedUsers(context);
+}
 
 // Optional: if you want to serve from a custom "images" folder:
 app.UseStaticFiles(); // Default static file serving for wwwroot
