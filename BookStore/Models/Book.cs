@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BookStore.Models
 {
@@ -26,9 +27,11 @@ namespace BookStore.Models
     public bool IsOnSale { get; set; }
     public decimal? DiscountPrice { get; set; }
     public DateTime? SaleStart { get; set; }
-    public DateTime? SaleEnd { get; set; }
+    public DateTime? SaleEnd { get; set; }       
+    [BindNever]          
     public int SalesCount { get; set; }      // For Bestsellers
 public bool HasAwards { get; set; }      // For Award Winners
+[BindNever]
 public DateTime CreatedAt { get; set; }  // For New Arrivals
  public bool InStock { get; set; }
     public bool IsPhysicalAccessAvailable { get; set; }
@@ -41,7 +44,8 @@ public DateTime CreatedAt { get; set; }  // For New Arrivals
        // Navigation property to Orders
     public ICollection<Order>? Orders { get; set; } = new List<Order>();
 public ICollection<OrderBook>? OrderBooks { get; set; }  // <-- Properly defined collection    }
-   public ICollection<BookOrder> BookOrders { get; set; } // This must be a collection
+
+   public ICollection<BookOrder>? BookOrders { get; set; } // This must be a collection
       //   public object OrderBooks { get; internal set; }
       // public object OrderBooks { get; set; }
     }

@@ -22,16 +22,16 @@ public class AdminController : ControllerBase
         _context = context;
     }
 
-//     [HttpPost("book")]
-//     [Consumes("multipart/form-data")]
-// public async Task<IActionResult> AddBook([FromForm]Book book,[FromForm] IFormFile image)
+// [HttpPost("book")]
+// [Consumes("multipart/form-data")]
+// public async Task<IActionResult> AddBook([FromForm] Book book, [FromForm] IFormFile image)
 // {
 //     book.SaleStart = ConvertToUtc(book.SaleStart);
 //     book.SaleEnd = ConvertToUtc(book.SaleEnd);
 
 //     // Handle image upload
 //     string imagePath = null;
-//     if (book.ImageUrl != null && book.ImageUrl.Length > 0)
+//     if (image != null && image.Length > 0)
 //     {
 //         var uploadsFolder = Path.Combine("wwwroot", "images");
 //         if (!Directory.Exists(uploadsFolder))
@@ -44,16 +44,18 @@ public class AdminController : ControllerBase
 
 //         using (var stream = new FileStream(filePath, FileMode.Create))
 //         {
-//             await book.ImageUrl.CopyToAsync(stream);
+//             await image.CopyToAsync(stream); // ✅ Use 'image' instead of 'book.ImageUrl'
 //         }
 
 //         imagePath = $"/images/{uniqueFileName}";
+//         book.ImageUrl = imagePath; // ✅ Save the relative URL to the database
 //     }
 
 //     _context.Books.Add(book);
 //     await _context.SaveChangesAsync();
 //     return Ok(book);
 // }
+
 
 //       private DateTime? ConvertToUtc(DateTime? dateTime)
 // {
@@ -107,6 +109,7 @@ public class AdminController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> AddBook([FromForm] Book book, [FromForm] IFormFile image)
     {
+
         book.SaleStart = ConvertToUtc(book.SaleStart);
         book.SaleEnd = ConvertToUtc(book.SaleEnd);
         if (!ModelState.IsValid)
@@ -288,7 +291,9 @@ public async Task<IActionResult> UpdateBook(int id, [FromForm] Book updated, [Fr
     }
 }
 
-    [HttpDelete("book/{id}")]
+     
+
+        [HttpDelete("book/{id}")]
     public async Task<IActionResult> DeleteBook(int id)
     {
         var book = await _context.Books.FindAsync(id);

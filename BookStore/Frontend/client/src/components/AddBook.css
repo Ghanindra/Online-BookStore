@@ -1,61 +1,221 @@
 /* AddBook.css */
+.add-book {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
 
-.add-book-form {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 25px;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    font-family: 'Segoe UI', sans-serif;
+.add-book__title {
+  color: #2a2a2a;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 1rem;
+  grid-column: span 2;
+}
+
+.add-book__input,
+.add-book__textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #f9f9f9;
+}
+
+.add-book__input:focus,
+.add-book__textarea:focus {
+  outline: none;
+  border-color: #4a69bd;
+  box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.1);
+  background-color: #ffffff;
+}
+
+.add-book__textarea {
+  min-height: 120px;
+  resize: vertical;
+  grid-column: span 2;
+}
+
+.add-book__input--title,
+.add-book__input--isbn {
+  grid-column: span 2;
+}
+
+.add-book__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Checkbox styling */
+.add-book__checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.add-book__checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-book__checkbox:checked {
+  background-color: #4a69bd;
+  border-color: #4a69bd;
+}
+
+.add-book__checkbox:checked::after {
+  content: "✓";
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+}
+
+.add-book__checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.1);
+}
+
+.add-book__checkbox-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* File input styling */
+.add-book__file {
+  margin: 0.5rem 0;
+  padding: 10px;
+  width: 100%;
+  background-color: #f9f9f9;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  grid-column: span 2;
+}
+
+.add-book__file::-webkit-file-upload-button {
+  background-color: #4a69bd;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-book__file::-webkit-file-upload-button:hover {
+  background-color: #3a5cbd;
+}
+
+/* Submit button styling */
+.add-book__submit {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  background-color: #4a69bd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  grid-column: span 2;
+}
+
+.add-book__submit:hover {
+  background-color: #3a5cbd;
+  transform: translateY(-2px);
+}
+
+.add-book__submit:active {
+  transform: translateY(0);
+}
+
+/* Special field styling */
+.add-book__input--price,
+.add-book__input--stock {
+  background-color: #f8fff8;
+  border-left: 3px solid #ccffcc;
+}
+
+.add-book__input--discount,
+.add-book__input--date {
+  background-color: #fff8f8;
+  border-left: 3px solid #ffcccb;
+}
+
+/* Author and genre styling */
+.add-book__input--author,
+.add-book__input--genre {
+  background-color: #f8f8ff;
+  border-left: 3px solid #ccccff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .add-book {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
   }
   
-  .add-book-form h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
+  .add-book__title,
+  .add-book__input--title,
+  .add-book__input--isbn,
+  .add-book__textarea,
+  .add-book__file,
+  .add-book__submit {
+    grid-column: span 1;
   }
-  
-  .add-book-form input,
-  .add-book-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-  }
-  
-  .add-book-form textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  
-  .add-book-form label {
-    display: block;
-    margin: 10px 0;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .add-book-form input[type="checkbox"] {
-    margin-right: 10px;
-    transform: scale(1.2);
-  }
-  
-  .add-book-form button {
-    width: 100%;
-    background-color: #007bff;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .add-book-form button:hover {
-    background-color: #0056b3;
-  }
-  
+}
+
+/* Add some subtle animations */
+.add-book__input,
+.add-book__textarea,
+.add-book__checkbox,
+.add-book__submit {
+  transition: all 0.2s ease-in-out;
+}
+
+.add-book__input:hover,
+.add-book__textarea:hover {
+  border-color: #b8c2e0;
+}
+
+/* Required field indicator */
+.add-book__input[required] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='3' fill='%23e74c3c'/%3E%3C/svg%3E");
+  background-position: right 10px top 50%;
+  background-repeat: no-repeat;
+  background-size: 8px;
+}

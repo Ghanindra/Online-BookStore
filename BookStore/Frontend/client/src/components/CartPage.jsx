@@ -335,7 +335,7 @@ const CartPage = () => {
   {bookmarks.includes(item.bookId) ? 'Remove Bookmark' : 'Add to Bookmark'}
 </button>
 {/* Navigate to book details page */}
-<button className="view-details-btn" onClick={() => viewBookDetails(item.bookId)}>
+                <button className="view-details-btn" onClick={() => viewBookDetails(item.bookId)}>
                   View Book Details
                 </button>
 
@@ -389,7 +389,7 @@ const CartPage = () => {
         <h3>Available Books</h3>
         <ul className="book-list">
           {books.map((book) => (
-            <li key={book.id} className="book-item">
+            <li key={book.id} className="book-item" onClick={() =>  viewBookDetails(book.id)}>
               <img src={`http://localhost:5023${book.imageUrl}`} alt="Book Image" />
               <div>
                 <strong>{book.title}</strong> <br />

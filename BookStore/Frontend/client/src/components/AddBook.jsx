@@ -1,140 +1,265 @@
+
+// import React, { useState } from 'react';
+// import axios from 'axios';
+// import './AddBook.css'
+// const AddBook = () => {
+//   const [formData, setFormData] = useState({
+//     title: '',
+//     isbn: '',
+//     author: '',
+//     genre: '',
+//     language: 'English',
+//     publisher: '',
+//     description: '',
+//     price: '',
+//     stock: '',
+//     format: '',
+//     isExclusive: false,
+//     isOnSale: false,
+//     discountPrice: '',
+//     hasAwards: false,
+//     inStock: true,
+//     isPhysicalAccessAvailable: true,
+//     saleStart: '',
+//     saleEnd: ''
+//   });
+
+//   const [imageFile, setImageFile] = useState(null);
+
+//   // Handle input change for text/number/checkbox
+//   const handleChange = (e) => {
+//     const { name, value, type, checked } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: type === 'checkbox' ? checked : value
+//     }));
+//   };
+
+//   const handleFileChange = (e) => {
+//     setImageFile(e.target.files[0]);
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const data = new FormData();
+
+//     for (let key in formData) {
+//       if (formData[key] !== null && formData[key] !== '') {
+//         data.append(key, formData[key]);
+//       }
+//     }
+
+//     if (imageFile) {
+//       data.append("image", imageFile);
+//     }
+
+//     try {
+//       const token = localStorage.getItem('token');
+//       console.log("token",token);
+      
+//       const res = await axios.post("http://localhost:5023/api/admin/book", data, {
+//         headers: { "Content-Type": "multipart/form-data" , 
+          
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       console.log("✅ Book submitted:", res.data);
+//       alert("Book submitted successfully!");
+//     } catch (err) {
+//       console.error("❌ Submission error:", err.response?.data || err.message);
+//       alert("Error submitting book.");
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit} encType="multipart/form-data">
+//       <h2>Add Book</h2>
+
+//       <input name="title" type="text" onChange={handleChange} placeholder="Title" required />
+//       <input name="isbn" type="text" onChange={handleChange} placeholder="ISBN" required />
+//       <input name="author" type="text" onChange={handleChange} placeholder="Author" />
+//       <input name="genre" type="text" onChange={handleChange} placeholder="Genre" />
+//       <input name="language" type="text" onChange={handleChange} placeholder="Language" />
+//       <input name="publisher" type="text" onChange={handleChange} placeholder="Publisher" />
+//       <textarea name="description" onChange={handleChange} placeholder="Description"></textarea>
+//       <input name="price" type="number" step="0.01" onChange={handleChange} placeholder="Price" />
+//       <input name="stock" type="number" onChange={handleChange} placeholder="Stock" />
+//       <input name="format" type="text" onChange={handleChange} placeholder="Format" />
+
+//       <label>
+//         <input name="isExclusive" type="checkbox" onChange={handleChange} />
+//         Is Exclusive
+//       </label>
+
+//       <label>
+//         <input name="isOnSale" type="checkbox" onChange={handleChange} />
+//         Is On Sale
+//       </label>
+
+//       <input name="discountPrice" type="number" step="0.01" onChange={handleChange} placeholder="Discount Price" />
+
+//       <label>
+//         <input name="hasAwards" type="checkbox" onChange={handleChange} />
+//         Has Awards
+//       </label>
+
+//       <label>
+//         <input name="inStock" type="checkbox" defaultChecked onChange={handleChange} />
+//         In Stock
+//       </label>
+
+//       <label>
+//         <input name="isPhysicalAccessAvailable" type="checkbox" defaultChecked onChange={handleChange} />
+//         Physical Access
+//       </label>
+
+//       <label>Sale Start</label>
+//       <input name="saleStart" type="datetime-local" onChange={handleChange} />
+//       <label>Sale End</label>
+//       <input name="saleEnd" type="datetime-local" onChange={handleChange} />
+
+//       <label>Book Image</label>
+//       <input type="file" accept="image/*" onChange={handleFileChange} required />
+
+//       <button type="submit">Submit Book</button>
+//     </form>
+//   );
+// };
+
+// export default AddBook;
+
+
 import React, { useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import './AddBook.css';
+import { useNavigate, useParams } from "react-router-dom";
+import './AddBook.css'
 
 const AddBook = () => {
-  const [book, setBook] = useState({
+    const navigate = useNavigate();
+  const [formData, setFormData] = useState({
     title: '',
     isbn: '',
     author: '',
     genre: '',
-    language: '',
+    language: 'English',
     publisher: '',
     description: '',
-    price: 0,
-    stock: 0,
+    price: '',
+    stock: '',
     format: '',
-    publicationDate: '',
     isExclusive: false,
     isOnSale: false,
     discountPrice: '',
-    saleStart: '',
-    saleEnd: '',
     hasAwards: false,
     inStock: true,
     isPhysicalAccessAvailable: true,
-    imageUrl: ''
+    saleStart: '',
+    saleEnd: ''
   });
 
   const [imageFile, setImageFile] = useState(null);
 
+  // Handle input change for text/number/checkbox
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
 
-    if (name === 'image') {
-      setImageFile(files[0]);
-      console.log("✅ Image file selected:", files[0]);
-    } else {
-      const updatedValue = type === 'checkbox' ? checked : value;
-      setBook((prevBook) => {
-        const updatedBook = { ...prevBook, [name]: updatedValue };
-        console.log(`📌 Field changed: ${name} =`, updatedValue);
-        return updatedBook;
-      });
-    }
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem('token');
-    console.log("🔐 Token:", token);
+    const data = new FormData();
+
+    for (let key in formData) {
+      if (formData[key] !== null && formData[key] !== '') {
+        data.append(key, formData[key]);
+      }
+    }
+
+    if (imageFile) {
+      data.append("image", imageFile);
+    }
 
     try {
-      const formData = new FormData();
-
-      // Append all non-empty fields
-      Object.entries(book).forEach(([key, value]) => {
-        if (value !== '' && value !== null && value !== undefined) {
-          formData.append(key, value);
+      const token = localStorage.getItem('token');
+      console.log("token",token);
+      
+      const res = await axios.post("http://localhost:5023/api/admin/book", data, {
+        headers: { "Content-Type": "multipart/form-data" , 
+          
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-
-      // Add fixed/required fields
-      formData.set('price', parseFloat(book.price));
-      formData.set('stock', parseInt(book.stock));
-      if (book.discountPrice) {
-        formData.set('discountPrice', parseFloat(book.discountPrice));
-      }
-      formData.set('createdAt', new Date().toISOString());
-      formData.set('salesCount', 0);
-
-      if (imageFile) {
-        formData.append('image', imageFile);
-      }
-
-      // ✅ Log final FormData before sending
-      console.log("📦 FormData being sent:");
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
-
-      // Send data
-      const res = await axios.post("http://localhost:5023/api/admin/book", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      toast.success("✅ Book added successfully!");
-      console.log("📚 Server Response:", res.data);
-
-      // Reset form
-      setBook({
-        title: '', isbn: '', author: '', genre: '', language: '', publisher: '', description: '',
-        price: 0, stock: 0, format: '', publicationDate: '', isExclusive: false, isOnSale: false,
-        discountPrice: '', saleStart: '', saleEnd: '', hasAwards: false, inStock: true,
-        isPhysicalAccessAvailable: true, imageUrl: ''
-      });
-      setImageFile(null);
-
+      );
+      console.log("Book submitted:", res.data);
+      alert("Book submitted successfully!");
+navigate('/admindashboard')
     } catch (err) {
-      toast.error("❌ Failed to add book");
-      console.error("❌ Error while adding book:", err);
-
-      if (err.response) {
-        console.error("🛑 Backend Response:", err.response.data);
-      }
+      console.error(" Submission error:", err.response?.data || err.message);
+      alert("Error submitting book.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="add-book-form">
-      <h2>Add New Book 📚</h2>
-      <input type="text" name="title" value={book.title} onChange={handleChange} placeholder="Title" required />
-      <input type="text" name="isbn" value={book.isbn} onChange={handleChange} placeholder="ISBN" />
-      <input type="text" name="author" value={book.author} onChange={handleChange} placeholder="Author" />
-      <input type="text" name="genre" value={book.genre} onChange={handleChange} placeholder="Genre" />
-      <input type="text" name="language" value={book.language} onChange={handleChange} placeholder="Language" />
-      <input type="text" name="publisher" value={book.publisher} onChange={handleChange} placeholder="Publisher" />
-      <textarea name="description" value={book.description} onChange={handleChange} placeholder="Description" />
-      <input type="number" name="price" value={book.price} onChange={handleChange} placeholder="Price" />
-      <input type="number" name="stock" value={book.stock} onChange={handleChange} placeholder="Stock" />
-      <input type="text" name="format" value={book.format} onChange={handleChange} placeholder="Format" />
-      <input type="date" name="publicationDate" value={book.publicationDate} onChange={handleChange} />
-      <label><input type="checkbox" name="isExclusive" checked={book.isExclusive} onChange={handleChange} /> Is Exclusive</label>
-      <label><input type="checkbox" name="isOnSale" checked={book.isOnSale} onChange={handleChange} /> Is On Sale</label>
-      <input type="number" name="discountPrice" value={book.discountPrice} onChange={handleChange} placeholder="Discount Price" />
-      <input type="date" name="saleStart" value={book.saleStart} onChange={handleChange} placeholder="Sale Start" />
-      <input type="date" name="saleEnd" value={book.saleEnd} onChange={handleChange} placeholder="Sale End" />
-      <label><input type="checkbox" name="hasAwards" checked={book.hasAwards} onChange={handleChange} /> Has Awards</label>
-      <label><input type="checkbox" name="inStock" checked={book.inStock} onChange={handleChange} /> In Stock</label>
-      <label><input type="checkbox" name="isPhysicalAccessAvailable" checked={book.isPhysicalAccessAvailable} onChange={handleChange} /> Physical Access Available</label>
-      <input type="file" name="image" accept="image/*" onChange={handleChange} />
-      {imageFile && <p>Selected: {imageFile.name}</p>}
-      <button type="submit">Add Book</button>
+    <form className="add-book" onSubmit={handleSubmit} encType="multipart/form-data">
+      <h2 className="add-book__title">Add Book</h2>
+
+      <input className="add-book__input add-book__input--title" name="title" type="text" onChange={handleChange} placeholder="Title" required />
+      <input className="add-book__input add-book__input--isbn" name="isbn" type="text" onChange={handleChange} placeholder="ISBN" required />
+      <input className="add-book__input add-book__input--author" name="author" type="text" onChange={handleChange} placeholder="Author" />
+      <input className="add-book__input add-book__input--genre" name="genre" type="text" onChange={handleChange} placeholder="Genre" />
+      <input className="add-book__input add-book__input--language" name="language" type="text" onChange={handleChange} placeholder="Language" />
+      <input className="add-book__input add-book__input--publisher" name="publisher" type="text" onChange={handleChange} placeholder="Publisher" />
+      <textarea className="add-book__textarea" name="description" onChange={handleChange} placeholder="Description"></textarea>
+      <input className="add-book__input add-book__input--price" name="price" type="number" step="0.01" onChange={handleChange} placeholder="Price" />
+      <input className="add-book__input add-book__input--stock" name="stock" type="number" onChange={handleChange} placeholder="Stock" />
+      <input className="add-book__input add-book__input--format" name="format" type="text" onChange={handleChange} placeholder="Format" />
+
+      <label className="add-book__checkbox-label">
+        <input className="add-book__checkbox" name="isExclusive" type="checkbox" onChange={handleChange} />
+        <span className="add-book__checkbox-text">Is Exclusive</span>
+      </label>
+
+      <label className="add-book__checkbox-label">
+        <input className="add-book__checkbox" name="isOnSale" type="checkbox" onChange={handleChange} />
+        <span className="add-book__checkbox-text">Is On Sale</span>
+      </label>
+
+      <input className="add-book__input add-book__input--discount" name="discountPrice" type="number" step="0.01" onChange={handleChange} placeholder="Discount Price" />
+
+      <label className="add-book__checkbox-label">
+        <input className="add-book__checkbox" name="hasAwards" type="checkbox" onChange={handleChange} />
+        <span className="add-book__checkbox-text">Has Awards</span>
+      </label>
+
+      <label className="add-book__checkbox-label">
+        <input className="add-book__checkbox" name="inStock" type="checkbox" defaultChecked onChange={handleChange} />
+        <span className="add-book__checkbox-text">In Stock</span>
+      </label>
+
+      <label className="add-book__checkbox-label">
+        <input className="add-book__checkbox" name="isPhysicalAccessAvailable" type="checkbox" defaultChecked onChange={handleChange} />
+        <span className="add-book__checkbox-text">Physical Access</span>
+      </label>
+
+      <label className="add-book__label">Sale Start</label>
+      <input className="add-book__input add-book__input--date" name="saleStart" type="datetime-local" onChange={handleChange} />
+      <label className="add-book__label">Sale End</label>
+      <input className="add-book__input add-book__input--date" name="saleEnd" type="datetime-local" onChange={handleChange} />
+
+      <label className="add-book__label">Book Image</label>
+      <input className="add-book__file" type="file" accept="image/*" onChange={handleFileChange} required />
+
+      <button className="add-book__submit" type="submit">Submit Book</button>
     </form>
   );
 };

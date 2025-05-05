@@ -180,7 +180,8 @@ import axios from "axios"
 import { useParams, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
-
+import { MdLocationOn } from 'react-icons/md';
+import { FaTruck } from 'react-icons/fa';
 import "./BookDetails.css"
 
 const BookDetails = () => {
@@ -340,7 +341,7 @@ const BookDetails = () => {
         </div>
 
         <p className="book-seller">
-          Sold by <a href="#">Booksmandala Nepal</a>
+          Sold by <a href="#">BookStore</a>
         </p>
 
         <div className="book-synopsis">
@@ -354,21 +355,21 @@ const BookDetails = () => {
           <h3>Get Estimated Arrival Time</h3>
 
           <div className="location-info">
-            <span className="location-icon">📍</span>
+            <span className="location-icon"><MdLocationOn style={{ color: 'red', fontSize: '24px' }} /></span>
             <div>
               <p className="location-name">Kathmandu</p>
               <p className="location-address">Kathmandu, Nepal</p>
             </div>
-            <span className="edit-icon">✏️</span>
+            {/* <span className="edit-icon">✏️</span> */}
           </div>
 
           <div className="delivery-info">
-            <span className="delivery-icon">🚚</span>
+            <span className="delivery-icon"> <FaTruck style={{ fontSize: '24px', marginRight: '8px' }} /></span>
             <div>
               <p className="delivery-title">Delivery Within</p>
               <p className="delivery-time">1 to 2 days</p>
             </div>
-            <span className="info-icon">ℹ️</span>
+            {/* <span className="info-icon">ℹ️</span> */}
           </div>
 
           <div className="price-section">
