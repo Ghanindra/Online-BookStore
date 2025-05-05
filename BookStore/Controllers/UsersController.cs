@@ -138,6 +138,83 @@ namespace BookStore.Controllers
 
             return Ok(cartItems);
         }
+        [HttpPost("bookmark/add")]
+public async Task<IActionResult> AddBookmark(BookmarkDTO dto)
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (userId == null) return Unauthorized("User ID not found in token.");
+
+    int userIdInt = int.Parse(userId);
+    var bookExists = await _context.Books.AnyAsync(b => b.Id == dto.BookId);
+    if (!bookExists)
+    {
+        return NotFound("Book does not exist.");
+    }
+
+
+    var existingBookmark = await _context.Bookmarks
+        .FirstOrDefaultAsync(b => b.UserId == userIdInt && b.BookId == dto.BookId);
+
+    if (existingBookmark != null)
+    {
+        return BadRequest("Book already bookmarked.");
+    }
+
+    var bookmark = new Bookmarks
+    {
+        UserId = userIdInt,
+        BookId = dto.BookId
+    };
+
+    await _context.Bookmarks.AddAsync(bookmark);
+    await _context.SaveChangesAsync();
+
+    return Ok("Book bookmarked.");
+}
+[HttpDelete("bookmark/remove")]
+public async Task<IActionResult> RemoveBookmark(int bookId)
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (userId == null) return Unauthorized("User ID not found in token.");
+
+    int userIdInt = int.Parse(userId);
+var bookmark = await _context.Bookmarks
+    .FirstOrDefaultAsync(b => b.BookId == bookId); // REMOVE UserId filter temporarily
+
+if (bookmark == null)
+{
+    return NotFound("Bookmark not found.");
+}
+
+    var bookmarks = await _context.Bookmarks
+        .FirstOrDefaultAsync(b => b.UserId == userIdInt && b.BookId == bookId);
+
+    if (bookmark == null)
+    {
+        return NotFound("Bookmark not found.");
+    }
+
+    _context.Bookmarks.Remove(bookmark);
+    await _context.SaveChangesAsync();
+
+    return Ok("Bookmark removed.");
+}
+[HttpGet("bookmarks")]
+public async Task<IActionResult> GetBookmarks()
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (userId == null) return Unauthorized("User ID not found in token.");
+
+    int userIdInt = int.Parse(userId);
+
+    var bookmarks = await _context.Bookmarks
+        .Where(b => b.UserId == userIdInt)
+        .Include(b => b.Book)
+        .ToListAsync();
+
+    return Ok(bookmarks);
+}
+
     }
 
     // DTOs

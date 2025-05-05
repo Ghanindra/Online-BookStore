@@ -1,173 +1,12 @@
-// ;
-
-
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
-// import './CartPage.css';
-
-// const CartPage = () => {
-//   const [cartItems, setCartItems] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [books, setBooks] = useState([]); // To store available books to be added to the cart
-//   const navigate = useNavigate(); // For redirect
-
-//   const fetchCart = async () => {
-//     try {
-//       const token = localStorage.getItem('token'); //  Get JWT from localStorage
-//       const response = await axios.get('http://localhost:5023/api/user/cart', {
-//         headers: {
-//           Authorization: `Bearer ${token}`, // 👈 Send as Bearer token
-//         },
-//       });
-//       console.log('cart',response.data);
-      
-//       setCartItems(response.data);
-//     } catch (err) {
-//       if (err.response && err.response.status === 401) {
-//         navigate('/login');
-//       } else {
-//         console.error('Error fetching cart:', err);
-//       }
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const fetchBooks = async () => {
-//     try {
-//       // Assuming you have an endpoint to fetch all available books to display in the catalog
-//       const response = await axios.get('http://localhost:5023/api/books');
-//       setBooks(response.data); // Set the available books
-//     } catch (err) {
-//       console.error('Error fetching books:', err);
-//     }
-//   };
-
-//   const addToCart = async (bookId) => {
-//     try {
-//       const token = localStorage.getItem('token'); // 👈 Get JWT from localStorage
-//       const response = await axios.post(
-//         'http://localhost:5023/api/user/cart/add',
-//         { bookId, quantity: 1 }, // Add with quantity 1
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-//       console.log(response.data); // Optionally log the response for debugging
-//       fetchCart(); // Refresh cart items
-//     } catch (err) {
-//       console.error('Error adding item to cart:', err);
-//     }
-//   };
-
-//   const removeFromCart = async (bookId) => {
-//     try {
-//       await axios.delete(`http://localhost:5023/api/user/cart/remove?bookId=${bookId}`, {
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem('token')}`,
-//         },
-//       });
-//       fetchCart(); // Refresh cart items after removal
-//     } catch (err) {
-//       console.error('Error removing item:', err);
-//     }
-//   };
-
-//   const updateQty = async (bookId, quantity) => {
-//     try {
-//       await axios.post(
-//         'http://localhost:5023/api/user/cart/add',
-//         { bookId, quantity },
-//         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-//       );
-//       fetchCart();
-//     } catch (err) {
-//       console.error('Error updating quantity:', err);
-//     }
-//   };
-
-//   const increaseQty = (item) => updateQty(item.bookId, 1);
-//   const decreaseQty = (item) =>
-//     item.quantity > 1 ? updateQty(item.bookId, -1) : removeFromCart(item.bookId);
-
-//   const calculateTotal = () =>
-//     cartItems.reduce((total, item) => {
-//       const price = item.book.discountPrice > 0 ? item.book.discountPrice : item.book.price;
-//       return total + price * item.quantity;
-//     }, 0);
-
-//   useEffect(() => {
-//     fetchCart();
-//     fetchBooks(); // Fetch available books to display on page load
-//   }, []);
-
-//   if (loading) return <p>Loading your cart...</p>;
-
-//   return (
-//     <div className="cart-page">
-//       <h2>Your Cart 🛒</h2>
-//       {cartItems.length === 0 ? (
-//         <p>No items in your cart.</p>
-//       ) : (
-//         <div>
-//           <ul className="cart-list">
-//             {cartItems.map((item) => (
-//               <li key={item.id} className="cart-item">
-//                 <div>
-//                   <strong>{item.book.title}</strong> <br />
-//                   Price: ${item.book.discountPrice > 0 ? item.book.discountPrice : item.book.price}
-//                 </div>
-
-//                 <div className="qty-controls">
-//                   <button onClick={() => decreaseQty(item)}>-</button>
-//                   <span>{item.quantity}</span>
-//                   <button onClick={() => increaseQty(item)}>+</button>
-//                 </div>
-
-//                 <button className="remove-btn" onClick={() => removeFromCart(item.bookId)}>
-//                   Remove
-//                 </button>
-//               </li>
-//             ))}
-//           </ul>
-
-//           <h3>Total: ${calculateTotal().toFixed(2)}</h3>
-//         </div>
-//       )}
-
-//       {/*  Available Books to Add to Cart */}
-//       <div className="add-to-cart-section">
-//         <h3>Available Books</h3>
-//         <ul className="book-list">
-//           {books.map((book) => (
-//             <li key={book.id} className="book-item">
-//                <img src={`http://localhost:5023${book.imageUrl}`} alt="Book Image" />
-//               <div>
-             
-//                 <strong>{book.title}</strong> <br />
-//                 Price: ${book.discountPrice > 0 ? book.discountPrice : book.price}
-//               </div>
-//               <button onClick={() => addToCart(book.id)} className="add-to-cart-btn">
-//                 Add to Cart
-//               </button>
-//             </li>
-//           ))}
-//         </ul>
-//       </div> 
-//     </div>
-//   );
-// };
-
-// export default CartPage;
-
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
+import { toast } from 'react-toastify';
+import { useCart } from "../context/CartContext";
+
+
 
 const CartPage = () => {
   const [orders, setOrders] = useState([]);
@@ -176,7 +15,8 @@ const CartPage = () => {
   const [books, setBooks] = useState([]); // To store available books to be added to the cart
   const [orderStatus, setOrderStatus] = useState(null); // To show order status
   const navigate = useNavigate(); // For redirect
-
+  const [bookmarks, setBookmarks] = useState([]);
+  const { refresh } = useCart();
   // Fetch cart items
   const fetchCart = async () => {
     try {
@@ -197,6 +37,76 @@ const CartPage = () => {
       setLoading(false);
     }
   };
+ 
+ 
+  
+  useEffect(() => {
+    fetchCart();
+    fetchBooks();
+    fetchBookmarks(); // Load bookmarks
+  }, []);
+  const fetchBookmarks = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const {data} = await axios.get('http://localhost:5023/api/user/bookmarks', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // const bookmarkedIds = response.data.map(book => book.id); // Adjust field if needed
+      // setBookmarks(bookmarkedIds);
+      // localStorage.setItem('bookmarks', JSON.stringify(bookmarkedIds));
+       // pull out just the Book IDs
+    setBookmarks(data.map(b => b.book.id));
+    } catch (err) {
+      console.error('Error fetching bookmarks:', err);
+    }
+  };
+  const toggleBookmark = async (bookId) => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+  
+    if (!token || !userId) {
+      toast.error("Please log in first!");
+      return;
+    }
+  
+    const numericBookId = Number(bookId);
+  
+    try {
+      if (bookmarks.includes(numericBookId)) {
+        // Remove bookmark
+        await axios.delete(
+          `http://localhost:5023/api/user/bookmark/remove?bookId=${numericBookId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const updatedBookmarks = bookmarks.filter(id => id !== numericBookId);
+        setBookmarks(updatedBookmarks); // Update state
+        localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks)); // Update localStorage
+        toast.info('Book removed from bookmarks.');
+        fetchBookmarks();
+      } else {
+        // Add bookmark
+        await axios.post(
+          'http://localhost:5023/api/user/bookmark/add',
+          { bookId: numericBookId },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const updatedBookmarks = [...bookmarks, numericBookId];
+        setBookmarks(updatedBookmarks); // Update state
+        localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks)); // Update localStorage
+        toast.success('Book added to bookmarks.');
+     
+      }
+    } catch (err) {
+      console.error('Error toggling bookmark:', err.response ? err.response.data : err);
+      toast.error('Failed to update bookmark.');
+    }
+  };
 
   // Fetch available books
   const fetchBooks = async () => {
@@ -209,7 +119,7 @@ const CartPage = () => {
   };
 
   // Add book to cart
-  const addToCart = async (bookId) => {
+  const addToCart = async (bookId,title) => {
     try {
       const token = localStorage.getItem('token'); // Get JWT from localStorage
       const response = await axios.post(
@@ -221,7 +131,9 @@ const CartPage = () => {
           },
         }
       );
+      toast.success(`${title} has been added to your cart.`);  // Show a success toast
       fetchCart(); // Refresh cart items
+      refresh();
     } catch (err) {
       console.error('Error adding item to cart:', err);
     }
@@ -236,6 +148,7 @@ const CartPage = () => {
         },
       });
       fetchCart(); // Refresh cart items after removal
+      refresh();
     } catch (err) {
       console.error('Error removing item:', err);
     }
@@ -262,7 +175,7 @@ const CartPage = () => {
   // Calculate total price
   const calculateTotal = () =>
     cartItems.reduce((total, item) => {
-      const price = item.book.discountPrice > 0 ? item.book.discountPrice : item.book.price;
+      const price = item.book.Price > 0 ? item.book.Price : item.book.price;
       return total + price * item.quantity;
     }, 0);
 
@@ -380,10 +293,9 @@ const CartPage = () => {
     
     
 
-  useEffect(() => {
-    fetchCart();
-    fetchBooks(); // Fetch available books to display on page load
-  }, []);
+    const viewBookDetails = (bookId) => {
+      navigate(`/book/${bookId}`); // Navigate to the BookDetails page with the bookId
+    };
 
   if (loading) return <p>Loading your cart...</p>;
 
@@ -399,7 +311,7 @@ const CartPage = () => {
               <li key={item.id} className="cart-item">
                 <div>
                   <strong>{item.book.title}</strong> <br />
-                  Price: ${item.book.discountPrice > 0 ? item.book.discountPrice : item.book.price}
+                  Price: ${item.book.Price > 0 ? item.book.Price : item.book.price}
                 </div>
 
                 <div className="qty-controls">
@@ -417,27 +329,48 @@ const CartPage = () => {
                   Order This Item
                 </button>
             
-      
+                <button className="bookmark-btn"
+  onClick={() => toggleBookmark(item.bookId)}
+>
+  {bookmarks.includes(item.bookId) ? 'Remove Bookmark' : 'Add to Bookmark'}
+</button>
+{/* Navigate to book details page */}
+<button className="view-details-btn" onClick={() => viewBookDetails(item.bookId)}>
+                  View Book Details
+                </button>
+
               </li>
             ))}
           </ul>
-          {orders.map((order) => (
+          {/* {orders.map((order) => (
   <li key={order.id}>
     Order #{order.id} - Status: {order.isCanceled ? 'Canceled' : 'Active'}
     {!order.isCanceled && (
       <button onClick={() => cancelOrder(order.id)}>Cancel Order</button>
     )}
   </li>
-))}
+))} */}
+{/* … inside your return() … */}
+<ul className="orders-list">
+  {orders
+    .filter(order => !order.isCanceled)      // only Active orders
+    .map(order => (
+      <li key={order.id}>
+        Order #{order.id} — Status: Active
+        <button onClick={() => cancelOrder(order.id)}>
+          Cancel Order
+        </button>
+      </li>
+    ))
+  }
+</ul>
+
 
           <h3>Total: ${calculateTotal().toFixed(2)}</h3>
 
-          {/* Order Button for All Items */}
-          {/* <button className="order-btn" onClick={placeOrder(selectedBooks)}>
-            Place Order for All Items
-          </button> */
-         < button
-  className="order-btn"
+
+          {
+         < button className="order-btn"
   onClick={() => {
     const selectedBooks = cartItems.map(item => item.bookId);
     placeOrder(selectedBooks);
@@ -460,9 +393,9 @@ const CartPage = () => {
               <img src={`http://localhost:5023${book.imageUrl}`} alt="Book Image" />
               <div>
                 <strong>{book.title}</strong> <br />
-                Price: ${book.discountPrice > 0 ? book.discountPrice : book.price}
+                Price: ${book.Price > 0 ? book.Price : book.Price}
               </div>
-              <button onClick={() => addToCart(book.id)} className="add-to-cart-btn">
+              <button onClick={() => addToCart(book.id,book.title)} className="add-to-cart-btn">
                 Add to Cart
               </button>
             </li>

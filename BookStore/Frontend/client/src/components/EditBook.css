@@ -1,0 +1,77 @@
+.edit-form {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+  }
+  
+  .edit-form h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+  }
+  
+  .edit-form input,
+  .edit-form textarea {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .edit-form input:focus,
+  .edit-form textarea:focus {
+    border-color: #0077ff;
+    outline: none;
+  }
+  
+  .edit-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  
+  .edit-form label input[type="checkbox"] {
+    margin-right: 8px;
+  }
+  
+  .edit-form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .edit-form button {
+    background-color: #0077ff;
+    color: #fff;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-form button:hover {
+    background-color: #005dd1;
+  }
+  
+  .edit-form img {
+    margin-top: 10px;
+    border-radius: 6px;
+  }
+  
+  @media (max-width: 600px) {
+    .edit-form {
+      padding: 20px;
+    }
+  }
+  

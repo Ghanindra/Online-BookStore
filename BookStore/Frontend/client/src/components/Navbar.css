@@ -1,155 +1,224 @@
-/* Navbar Styles */
+/* Navbar.css */
 .navbar {
-    background-color: #5d4037;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2a2a2a;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-logo:hover {
+  color: #4a69bd;
+}
+
+.search-book {
+  display: flex;
+  flex: 1;
+  max-width: 500px;
+  margin: 0 2rem;
+}
+
+.navbar-search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px 0 0 4px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.navbar-search-input:focus {
+  border-color: #4a69bd;
+}
+
+.navbar-search-button {
+  background-color: #4a69bd;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  padding: 0 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-search-button:hover {
+  background-color: #3a5cbd;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-link {
+  color: #2a2a2a;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-link:hover {
+  color: #4a69bd;
+}
+
+.navbar-button {
+  background-color: transparent;
+  border: 1px solid #4a69bd;
+  color: #4a69bd;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navbar-button:hover {
+  background-color: #4a69bd;
+  color: white;
+}
+
+.navbar-cart {
+  position: relative;
+  color: #2a2a2a;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-cart:hover {
+  color: #4a69bd;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  height: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* Dropdown styles */
+.navbar-item {
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 0.5rem 0;
+  z-index: 1;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+}
+
+.dropdown-content .navbar-link {
+  color: #2a2a2a;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  display: block;
+  font-weight: 400;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-content .navbar-link:hover {
+  background-color: #f8f9fa;
+  color: #4a69bd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Add a small triangle indicator */
+.dropdown > .navbar-link::after {
+  content: "▼";
+  font-size: 0.6rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .navbar-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    height: 70px;
+    flex-direction: column;
+    padding: 1rem;
   }
   
-  /* Logo Styles */
-  .navbar-logo {
-    color: #fff;
-    font-size: 1.8rem;
-    font-weight: 700;
-    text-decoration: none;
-    letter-spacing: 0.5px;
-    position: relative;
-    padding: 5px 0;
-    white-space: nowrap;
-  }
-  
-  .navbar-logo:after {
-    content: "📚";
-    font-size: 1.2rem;
-    margin-left: 8px;
-    opacity: 0.9;
-  }
-  
-  .navbar-logo:before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #ffd54f;
-    transition: width 0.3s ease;
-  }
-  
-  .navbar-logo:hover:before {
+  .search-book {
+    margin: 1rem 0;
     width: 100%;
+    max-width: 100%;
   }
   
-  
-  
-  /* Links Container */
   .navbar-links {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-  }
-  
-  /* Navbar Items and Links */
-  .navbar-item {
-    position: relative;
-  }
-  
-  .navbar-link {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-  }
-  
-  .navbar-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Dropdown Styles */
-  .dropdown {
-    position: relative;
-    display: inline-block;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1rem;
   }
   
   .dropdown-content {
+    position: static;
+    box-shadow: none;
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #fff;
-    min-width: 200px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 10px 0;
-    z-index: 1;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
+    padding-left: 1rem;
   }
   
   .dropdown:hover .dropdown-content {
+    display: none;
+  }
+  
+  .dropdown.active .dropdown-content {
     display: block;
-    animation: fadeIn 0.3s ease;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-links {
+    flex-wrap: wrap;
+    gap: 1rem;
   }
   
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(10px);
-    }
+  .navbar-search-button {
+    padding: 0 0.75rem;
   }
-  
-  .dropdown-content .navbar-link {
-    color: #5d4037;
-    padding: 10px 20px;
-    display: block;
-    text-align: left;
-    transition: all 0.2s ease;
-    border-radius: 0;
-  }
-  
-  .dropdown-content .navbar-link:hover {
-    background-color: #f9f7f4;
-    padding-left: 25px;
-  }
-  
-  /* Button Styles */
-  .navbar-button {
-    background-color: #a1887f;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-  }
-  
-  .navbar-button:hover {
-    background-color: #8d6e63;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  
+}

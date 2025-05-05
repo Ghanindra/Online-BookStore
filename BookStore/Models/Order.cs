@@ -17,9 +17,14 @@ namespace BookStore.Models
     public required string ClaimCode { get; set; }
     public bool IsCanceled { get; set; } = false;
     public decimal FinalPrice { get; set; }
+public decimal DiscountAmount { get; set; } = 0; // Add default to avoid null error
+
       public required List<Book> Books { get; set; }
       public ICollection<OrderBook> OrderBooks { get; set; }
+        public List<BookOrder> OrderItems { get; internal set; }
+        public ICollection<BookOrder> BookOrders { get; set; }  // Again, ensure this is a collection
 
-}
+        // public object BookOrder { get; internal set; }
+    }
 
 }

@@ -119,6 +119,7 @@ namespace BookStore.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _config;
 
+
         public AuthController(ApplicationDbContext context, IConfiguration config)
         {
             _context = context;
@@ -150,7 +151,8 @@ namespace BookStore.Controllers
             {
                 message = "User registered successfully.",
                 token,
-                role
+                role,
+            
             });
         }
 
@@ -165,7 +167,14 @@ namespace BookStore.Controllers
             var role = user.IsAdmin ? "Admin" : "User";  // Set the role based on user status
 
             var token = GenerateJwt(user, role);
-            return Ok(new { message = "Login successful", token });
+            // return Ok(new { message = "Login successful", token,role });
+             return Ok(new 
+    { 
+        message = "Login successful", 
+        token,
+        role,
+        userId = user.Id // Send user ID along with the token and role
+    });
         }
 
         // Logout User (No server-side action needed with JWT, just remove token client-side)
@@ -189,10 +198,9 @@ namespace BookStore.Controllers
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, role) // Include the user's role
             };
-
-#pragma warning disable CS8604 // Possible null reference argument.
+ // Possible null reference argument.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-#pragma warning restore CS8604 // Possible null reference argument.
+ // Possible null reference argument.
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

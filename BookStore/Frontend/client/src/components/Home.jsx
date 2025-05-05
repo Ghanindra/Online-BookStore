@@ -248,7 +248,9 @@ const Home = () => {
   useEffect(() => {
     fetchBooks();
   }, []);
-
+  const handleNavigateToDetails = (bookId) => {
+    navigate(`/book/${bookId}`);
+  };
   return (
     <div className="homepage-container">
       {/* <h1 className="homepage-title">Book Store 🛍️</h1> */}
@@ -280,7 +282,8 @@ const Home = () => {
           <div className="kitabs-grid">
             {newArrivals.map((kitab) => {
               return (
-                <div key={kitab.id} className="kitab-card">
+                // <div key={kitab.id} className="kitab-card">
+                <div key={kitab.id} className="kitab-card" onClick={() => handleNavigateToDetails(kitab.id)}>
                      <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
                   <h2>{kitab?.title}</h2>
                   <p>By {kitab?.author}</p>
@@ -301,7 +304,8 @@ const Home = () => {
           <div className="kitab-list">
             {newArrivals.map((kitab) => {
               return (
-                <div key={kitab.id} className="kitab-card">
+                // <div key={kitab.id} className="kitab-card">
+                <div key={kitab.id} className="kitab-card" onClick={() => handleNavigateToDetails(kitab.id)}>
                      <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
                   <h2>{kitab?.title}</h2>
                   <p>By {kitab?.author}</p>
@@ -331,7 +335,8 @@ const Home = () => {
           <div className="kitabs-grid">
             {comingSoon.map((kitab) => {
               return (
-                <div key={kitab.id} className="kitab-card">
+                // <div key={kitab.id} className="kitab-card">
+                <div key={kitab.id} className="kitab-card" onClick={() => handleNavigateToDetails(kitab.id)}>
                      <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
                   <h2>{kitab?.title}</h2>
                   <p>By {kitab?.author}</p>
@@ -354,7 +359,8 @@ const Home = () => {
           <div className="kitab-list">
             {comingSoon.map((kitab) => {
               return (
-                <div key={kitab.id} className="kitab-list-item">
+                // <div key={kitab.id} className="kitab-list-item">
+                <div key={kitab.id} className="kitab-list-item" onClick={() => handleNavigateToDetails(kitab.id)}>
                   <div>
                     <strong>{kitab.title}</strong> by {kitab.author}
                   </div>
@@ -378,19 +384,7 @@ const Home = () => {
         )}
       </section>
 
-      {/* Best Authors Section
-      <section className="section">
-        <h2>Best Authors</h2>
-        {bestAuthors.length === 0 ? (
-          <p>No best authors found.</p>
-        ) : (
-          <ul className="author-list">
-            {bestAuthors.map((author, idx) => (
-  <li key={idx}>{typeof author === 'object' ? author.name : author}</li> 
-))}
-          </ul>
-        )}
-      </section> */}
+     
     </div>
   );
 };

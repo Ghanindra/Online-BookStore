@@ -9,12 +9,13 @@ namespace BookStore.Models
 {
     public int Id { get; set; }
     public int BookId { get; set; }
-    public required Book Book { get; set; }
+    public  Book? Book { get; set; }
     public int UserId { get; set; }
-    public required User User { get; set; }
+    public  User? User { get; set; }
     public int Rating { get; set; }
-    public required string Comment { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public  string Comment { get; set; }
+public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
 }
 
 }

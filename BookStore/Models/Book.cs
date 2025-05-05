@@ -32,6 +32,7 @@ public bool HasAwards { get; set; }      // For Award Winners
 public DateTime CreatedAt { get; set; }  // For New Arrivals
  public bool InStock { get; set; }
     public bool IsPhysicalAccessAvailable { get; set; }
+    [MaxLength(1000)] // or use [StringLength(1000)]
     public string? ImageUrl { get; set; }
     public  ICollection<Review>? Reviews { get; set; }
     // Navigation property to CartItems
@@ -40,5 +41,8 @@ public DateTime CreatedAt { get; set; }  // For New Arrivals
        // Navigation property to Orders
     public ICollection<Order>? Orders { get; set; } = new List<Order>();
 public ICollection<OrderBook>? OrderBooks { get; set; }  // <-- Properly defined collection    }
-}
+   public ICollection<BookOrder> BookOrders { get; set; } // This must be a collection
+      //   public object OrderBooks { get; internal set; }
+      // public object OrderBooks { get; set; }
+    }
 }

@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\images\\29b1aaa1-3f1f-4ec5-826a-d2709aa618ff.jpg"
     },
     {
+      "Id": "D:\\BookStore\\BookStore\\wwwroot\\images\\414225af-6591-4086-a0d2-7821fcb5a6ba.jfif",
+      "PackagePath": "staticwebassets\\images\\414225af-6591-4086-a0d2-7821fcb5a6ba.jfif"
+    },
+    {
       "Id": "D:\\BookStore\\BookStore\\wwwroot\\images\\6361c435-52a3-4c1b-9b83-3378ad98548d.jpg",
       "PackagePath": "staticwebassets\\images\\6361c435-52a3-4c1b-9b83-3378ad98548d.jpg"
     },
@@ -45,8 +49,20 @@
       "PackagePath": "staticwebassets\\images\\c0011bea-518a-4f3e-82fe-46abb87b36aa.jpg"
     },
     {
+      "Id": "D:\\BookStore\\BookStore\\wwwroot\\images\\e660195c-e1ae-404a-9b4e-08e2769e5c82.png",
+      "PackagePath": "staticwebassets\\images\\e660195c-e1ae-404a-9b4e-08e2769e5c82.png"
+    },
+    {
+      "Id": "D:\\BookStore\\BookStore\\wwwroot\\images\\e80535b8-3fad-4dab-ac42-d4db513e0923.jpg",
+      "PackagePath": "staticwebassets\\images\\e80535b8-3fad-4dab-ac42-d4db513e0923.jpg"
+    },
+    {
       "Id": "D:\\BookStore\\BookStore\\wwwroot\\images\\ea484d64-1e71-41bf-9970-5a2e930e08d7.jpg",
       "PackagePath": "staticwebassets\\images\\ea484d64-1e71-41bf-9970-5a2e930e08d7.jpg"
+    },
+    {
+      "Id": "D:\\BookStore\\BookStore\\wwwroot\\images\\ed6c3d43-3edb-4cc9-822b-984b759aad84.jpg",
+      "PackagePath": "staticwebassets\\images\\ed6c3d43-3edb-4cc9-822b-984b759aad84.jpg"
     },
     {
       "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.BookStore.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

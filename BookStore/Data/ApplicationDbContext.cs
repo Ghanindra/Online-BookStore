@@ -19,7 +19,10 @@ public class ApplicationDbContext : DbContext
  public DbSet<CartItem> CartItems { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Review> Reviews { get; set; }
-    public DbSet<OrderBook> OrderBooks { get; set; }
+      public DbSet<BookOrder> BookOrders { get; set; }  // Add this
+    // public DbSet<OrderBook> OrderBooks { get; set; }
+
+public DbSet<Bookmarks> Bookmarks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,10 +31,13 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<OrderBook>()
             .HasKey(ob => new { ob.BookId, ob.OrderId });
-
+{
+    modelBuilder.Entity<Book>()
+        .Ignore(b => b.OrderBooks);
+}
         modelBuilder.Entity<OrderBook>()
             .HasOne(ob => ob.Book)
-            .WithMany(b => b.OrderBooks)
+            .WithMany(static b => b.OrderBooks)
             .HasForeignKey(ob => ob.BookId);
 
         modelBuilder.Entity<OrderBook>()
@@ -58,8 +64,26 @@ public class ApplicationDbContext : DbContext
 }
 }
 
+
+    modelBuilder.Entity<Bookmarks>()
+    .HasOne(b => b.Book)
+    .WithMany()
+    .HasForeignKey(b => b.BookId);
+
+     modelBuilder.Entity<BookOrder>()
+        .HasOne(bo => bo.Book)
+        .WithMany(b => b.BookOrders)
+        .HasForeignKey(bo => bo.BookId);
+         modelBuilder.Entity<BookOrder>()
+        .HasOne(bo => bo.Order)
+        .WithMany(o => o.BookOrders) // Adjust this if the relationship is one-to-one
+        .HasForeignKey(bo => bo.OrderId); // Ensure this property exists
+
+
         base.OnModelCreating(modelBuilder);
     }
+    
 }
+
 
 }

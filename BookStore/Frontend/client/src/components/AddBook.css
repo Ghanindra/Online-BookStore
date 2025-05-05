@@ -1,0 +1,61 @@
+/* AddBook.css */
+
+.add-book-form {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .add-book-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+  }
+  
+  .add-book-form input,
+  .add-book-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+  }
+  
+  .add-book-form textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .add-book-form label {
+    display: block;
+    margin: 10px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .add-book-form input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+  }
+  
+  .add-book-form button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-book-form button:hover {
+    background-color: #0056b3;
+  }
+  

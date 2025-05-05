@@ -1,25 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookStore.Models;
+using Microsoft.Extensions.Logging;
 
-namespace BookStore.Services
+public class DiscountService
 {
-    public class DiscountService
-{
+    private readonly ILogger<DiscountService> _logger;
+
+    public DiscountService(ILogger<DiscountService> logger)
+    {
+        _logger = logger;
+    }
+
     public decimal CalculateDiscount(User user, int bookCount, decimal totalPrice)
     {
-        decimal discount = 0;
+        decimal discountPercentage = 0;
 
         if (bookCount >= 5)
-            discount += 0.05m;
+            discountPercentage += 0.05m;
 
         if (user.SuccessfulOrders >= 10)
-            discount += 0.10m;
+            discountPercentage += 0.10m;
 
-        return totalPrice * (1 - discount);
+        _logger.LogInformation("User has {SuccessfulOrders} successful orders.", user.SuccessfulOrders);
+        _logger.LogInformation("Discount Percentage Applied: {DiscountPercentage:P}", discountPercentage);
+
+        decimal discountAmount = totalPrice * discountPercentage;
+        decimal finalPrice = totalPrice - discountAmount;
+
+        _logger.LogInformation("Discount Amount: {DiscountAmount}", discountAmount);
+        _logger.LogInformation("Final Price after discount: {FinalPrice}", finalPrice);
+
+        return finalPrice;
     }
-}
-
 }
