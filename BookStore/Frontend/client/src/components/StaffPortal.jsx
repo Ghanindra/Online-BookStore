@@ -1,115 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const StaffPortal = () => {
-//   const [orders, setOrders] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchOrders = async () => {
-//       const token = localStorage.getItem("token");
-//       try {
-//         const { data } = await axios.get(
-//           "http://localhost:5023/api/orders/all",
-//           { headers: { Authorization: `Bearer ${token}` } }
-//         );
-//         setOrders(data);
-//       } catch {
-//         setError("Failed to load orders");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchOrders();
-//   }, []);
-
-//   if (loading) return <div>Loading…</div>;
-//   if (error)   return <div style={{ color: "red" }}>{error}</div>;
-
-//   return (
-//     <div>
-//       <h1>All Users’ Orders</h1>
-//       {orders.length === 0 ? (
-//         <p>No orders found.</p>
-//       ) : (
-//         <table style={{ width: "100%", borderCollapse: "collapse" }}>
-//           <thead>
-//             <tr>
-//               <th>Order ID</th>
-//               <th>Claim Code</th>
-//               <th>Final Price</th>
-//               <th>Canceled?</th>
-//               <th>User</th>
-//               <th>Books</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {orders.map((order, orderIdx) => {
-//               // use camelCase properties
-//               const id      = order.id   ?? orderIdx;
-//               const claim   = order.claimCode;
-//               const price   = typeof order.finalPrice === "number"
-//                                 ? order.finalPrice.toFixed(2)
-//                                 : "0.00";
-//               const canceled = order.isCanceled;
-
-//               return (
-//                 <tr key={`order-${id}`}>
-//                   <td>{id}</td>
-//                   <td>{claim}</td>
-//                   <td>${price}</td>
-//                   <td>{canceled ? "Yes" : "No"}</td>
-//                   <td>
-//                     {order.user
-//                       ? `${order.user.fullName} (${order.user.email})`
-//                       : "—"}
-//                   </td>
-//                   <td>
-//                     <ul style={{ paddingLeft: 20, margin: 0 }}>
-//                       {Array.isArray(order.books) && order.books.length > 0
-//                         ? order.books.map((book, bookIdx) => {
-//                             const bid    = book.id ?? `${id}-${bookIdx}`;
-//                             const bprice = typeof book.price === "number"
-//                                              ? book.price.toFixed(2)
-//                                              : "0.00";
-//                             return (
-//                               <li
-//                                 key={`order-${id}-book-${bid}`}
-//                                 style={{ marginBottom: 4 }}
-//                               >
-//                                 <img
-//                                   src={book.imageUrl}
-//                                   alt={book.title}
-//                                   width={40}
-//                                   style={{
-//                                     verticalAlign: "middle",
-//                                     marginRight: 8,
-//                                   }}
-//                                 />
-//                                 <strong>{book.title}</strong> by {book.author} — $
-//                                 {bprice}
-//                               </li>
-//                             );
-//                           })
-//                         : (
-//                           <li key={`order-${id}-no-books`}>
-//                             No books
-//                           </li>
-//                         )}
-//                     </ul>
-//                   </td>
-//                 </tr>
-//               );
-//             })}
-//           </tbody>
-//         </table>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default StaffPortal;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaSearch } from 'react-icons/fa';
@@ -144,7 +32,26 @@ const StaffPortal = () => {
       setLoading(false);
     }
   };
-
+  const markAsSupplied = async (orderId) => {
+    try {
+      const token = localStorage.getItem("token");
+    
+      await axios.patch(
+        `http://localhost:5023/api/orders/${orderId}/supply`, 
+        {},  // You can pass an empty object or any necessary data
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+    
+      // Re-fetch orders to update the UI
+      fetchOrders(claimCode);
+    } catch (err) {
+      alert("Failed to mark order as supplied.");
+      console.error(err);
+    }
+  };
+  
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -188,9 +95,13 @@ const StaffPortal = () => {
                 <th className="staff-portal__table-header">Order ID</th>
                 <th className="staff-portal__table-header">Claim Code</th>
                 <th className="staff-portal__table-header">Final Price</th>
-                <th className="staff-portal__table-header">Canceled?</th>
+      
                 <th className="staff-portal__table-header">Books</th>
                 <th className="staff-portal__table-header">User</th>
+                <th className="staff-portal__table-header">Canceled?</th>
+                <th className="staff-portal__table-header">Is Supplied</th>
+                <th className="staff-portal__table-header">Supplied At</th>
+
               </tr>
             </thead>
             <tbody className="staff-portal__table-body">
@@ -199,20 +110,20 @@ const StaffPortal = () => {
                   <td className="staff-portal__table-cell">{ord.id}</td>
                   <td className="staff-portal__table-cell staff-portal__claim-code">{ord.claimCode}</td>
                   <td className="staff-portal__table-cell staff-portal__price">${Number(ord.finalPrice).toFixed(2)}</td>
-                  <td className="staff-portal__table-cell">
-                    <span className={`staff-portal__status ${ord.isCanceled ? "staff-portal__status--canceled" : "staff-portal__status--active"}`}>
-                      {ord.isCanceled ? "Yes" : "No"}
-                    </span>
-                  </td>
+                 
+              
+ 
+
                   <td className="staff-portal__table-cell">
                     <ul className="staff-portal__book-list">
                       {(ord.books || []).map(book => (
                         <li className="staff-portal__book-item" key={`order-${ord.id}-book-${book.id}`}>
                           <img
                             className="staff-portal__book-image"
-                            src={book.imageUrl || "/placeholder.svg"}
+                            src={`http://localhost:5023${book.imageUrl}`}
                             alt={book.title}
                           />
+
                           <span className="staff-portal__book-info">
                             <span className="staff-portal__book-title">{book.title}</span> by 
                             <span className="staff-portal__book-author"> {book.author}</span>
@@ -233,6 +144,29 @@ const StaffPortal = () => {
                       : <span className="staff-portal__no-user">—</span>
                     }
                   </td>
+                  <td className="staff-portal__table-cell">
+                    <span className={`staff-portal__status ${ord.isCanceled ? "staff-portal__status--canceled" : "staff-portal__status--active"}`}>
+                      {ord.isCanceled ? "Yes" : "No"}
+                    </span>
+                  </td>
+                  <td className="staff-portal__table-cell">
+  <span className={`staff-portal__status ${ord.isSupplied ? "staff-portal__status--active" : "staff-portal__status--pending"}`}>
+    {ord.isSupplied ? "Yes" : "No"}
+  </span>
+  {!ord.isSupplied && (
+    <button
+      className="staff-portal__supply-button"
+      onClick={() => markAsSupplied(ord.id)}
+    >
+      Mark as Supplied
+    </button>
+  )}
+</td>
+<td className="staff-portal__table-cell">
+  {ord.suppliedAt
+    ? new Date(ord.suppliedAt).toLocaleString()
+    : <span className="staff-portal__no-supply">—</span>}
+</td>
                 </tr>
               ))}
             </tbody>

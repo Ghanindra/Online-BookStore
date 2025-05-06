@@ -90,6 +90,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
+
 import "./Navbar.css";
 
 const Navbar = ({ isAuthenticated,  onLogout }) => {
@@ -99,9 +100,13 @@ const Navbar = ({ isAuthenticated,  onLogout }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const role = localStorage.getItem("role"); 
   const handleLogoutClick = () => {
-    onLogout();
-    navigate("/");
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      onLogout();
+      navigate("/");
+    }
   };
+  
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

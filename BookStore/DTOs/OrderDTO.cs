@@ -11,6 +11,8 @@ namespace BookStore.DTOs
         public List<int> BookIds { get; set; } = new List<int>();
         public DateTime OrderDate { get; set; }
         public string ClaimCode { get; set; } = string.Empty;
+            public bool IsSupplied { get; set; }
+            public DateTime? SuppliedAt { get; set;} 
         public decimal TotalAmount { get; set; }
     }
 }

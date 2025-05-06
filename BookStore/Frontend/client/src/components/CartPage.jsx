@@ -135,7 +135,7 @@ const CartPage = () => {
       fetchCart(); // Refresh cart items
       refresh();
     } catch (err) {
-      console.error('Error adding item to cart:', err);
+    console.error('Error adding item to cart:', err);
     }
   };
 
@@ -164,7 +164,7 @@ const CartPage = () => {
       );
       fetchCart();
     } catch (err) {
-      console.error('Error updating quantity:', err);
+      toast.error('Error updating quantity:', err);
     }
   };
 
@@ -192,10 +192,10 @@ const CartPage = () => {
             }
           }
         );
-        alert(`Order placed! Code: ${data.claimCode}`);
+        toast.success(`Order placed! Code: ${data.claimCode}`);
       } catch (err) {
         console.error(err);
-        alert('Error placing order.');
+        toast('Error placing order.');
       }
     };
     const placeOrder = async (selectedBooks) => {
@@ -203,7 +203,7 @@ const CartPage = () => {
     
       // If there are no selected books, show an alert and return early
       if (selectedBooks.length === 0) {
-        alert('No books selected for the order');
+        toast.error('No books selected for the order');
         return;
       }
     
@@ -221,7 +221,7 @@ const CartPage = () => {
     
         // Handle success response
         const { orderId, claimCode } = response.data;
-        alert(`Order placed successfully! Order ID: ${orderId}, Claim Code: ${claimCode}`);
+        toast.success(`Order placed successfully! Order ID: ${orderId}, Claim Code: ${claimCode}`);
       } catch (err) {
         // Handle error
         console.error(err);
@@ -273,7 +273,7 @@ const CartPage = () => {
           }
         );
     
-        alert('Order canceled successfully.');
+        toast.success('Order canceled successfully.');
     
         // Directly update the `orders` state to reflect the canceled order
         setOrders((prevOrders) =>
@@ -389,8 +389,8 @@ const CartPage = () => {
         <h3>Available Books</h3>
         <ul className="book-list">
           {books.map((book) => (
-            <li key={book.id} className="book-item" onClick={() =>  viewBookDetails(book.id)}>
-              <img src={`http://localhost:5023${book.imageUrl}`} alt="Book Image" />
+            <li key={book.id} className="book-item" >
+              <img src={`http://localhost:5023${book.imageUrl}`} alt="Book Image" onClick={() =>  viewBookDetails(book.id)} />
               <div>
                 <strong>{book.title}</strong> <br />
                 Price: ${book.Price > 0 ? book.Price : book.Price}

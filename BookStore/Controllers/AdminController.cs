@@ -112,6 +112,10 @@ public class AdminController : ControllerBase
 
         book.SaleStart = ConvertToUtc(book.SaleStart);
         book.SaleEnd = ConvertToUtc(book.SaleEnd);
+        book.PublicationDate = ConvertToUtc(book.PublicationDate);
+          // Automatically set CreatedAt to the current UTC time
+    book.CreatedAt = DateTime.UtcNow;
+
         if (!ModelState.IsValid)
 {
     return BadRequest(ModelState); // Returns what field is missing or failed validation

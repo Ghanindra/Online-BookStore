@@ -1,3 +1,6 @@
+// ;
+
+
 // import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
 // import './Home.css';
@@ -5,14 +8,18 @@
 // import { useNavigate } from 'react-router-dom';
 
 // const Home = () => {
-//   const [category, setCategory] = useState('all');
-//   const [kitabs, setBooks] = useState([]);
+//   const [newArrivals, setNewArrivals] = useState([]);
+//   const [comingSoon, setComingSoon] = useState([]);
+//   const [bestAuthors, setBestAuthors] = useState([]);
+//   const [physicalBooks, setPhysicalBooks] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [viewMode, setViewMode] = useState('grid');
-//   const [cartItems, setCartItems] = useState([]); // Local cart state to keep track of added items
+//   const [cartItems, setCartItems] = useState([]);
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 //   const navigate = useNavigate();
 
-//   const handleAddToCart = async (kitabId) => {
+//   const handleAddToCart = async (BookId) => {
 //     try {
 //       const token = localStorage.getItem('token');
 //       if (!token) {
@@ -20,10 +27,9 @@
 //         return;
 //       }
 
-//       // Make API call to add to cart
 //       await axios.post(
 //         'http://localhost:5023/api/user/cart/add',
-//         { kitabId, quantity: 1 },
+//         { BookId, quantity: 1 },
 //         {
 //           headers: {
 //             Authorization: `Bearer ${token}`,
@@ -31,23 +37,20 @@
 //         }
 //       );
 
-//       // Optionally, update local state for the cart (this will show cart in the UI without navigating)
-//       const updatedCartItems = [...cartItems];
-//       const addedBook = kitabs.find((kitab) => kitab.id === kitabId);
-//       updatedCartItems.push({ ...addedBook, quantity: 1 });
-//       setCartItems(updatedCartItems);  // Update the local cart state
+//       const addedBook =
+//         newArrivals.find((book) => book.id === BookId) ||
+//         comingSoon.find((book) => book.id === BookId) ||
+//         physicalBooks.find((book) => book.id === BookId);
 
-//       // Optionally, show success message
-//       toast.success(`${addedBook.title} has been added to your cart.`);
+//       const updatedCartItems = [...cartItems, { ...addedBook, quantity: 1 }];
+//       setCartItems(updatedCartItems);
 
-      
-//       // Navigate to the cart page if needed
+//       toast.success(`${addedBook?.title} has been added to your cart.`);
 //       navigate('/cart');
-      
 //     } catch (error) {
 //       console.error('Failed to add to cart:', error);
-//       if (error.response && error.response.status === 401) {
-//         toast.failure('Please log in to add kitabs to the cart.');
+//       if (error.response?.status === 401) {
+//         toast.error('Please log in to add kitabs to the cart.');
 //         navigate('/login');
 //       } else {
 //         toast.error('Something went wrong! Please try again later.');
@@ -55,120 +58,351 @@
 //     }
 //   };
 
-//   const fetchBooks = async (selectedCategory) => {
+//   const handleNavigateToDetails = (bookId) => {
+//     navigate(`/book/${bookId}`);
+//   };
+
+//   const fetchBooks = async () => {
 //     try {
 //       setLoading(true);
-//       const response = await axios.get(
-//         `http://localhost:5023/api/kitabs/filter?category=${selectedCategory}`
-//       );
-     
-//       console.log('Books fetched:', response.data);  // Log the fetched data
-      
-//       setBooks(response.data);
+
+//       const [newArrivalsRes, comingSoonRes, bestAuthorsRes] = await Promise.all([
+//         axios.get('http://localhost:5023/api/books/filter?category=newarrivals'),
+//         axios.get('http://localhost:5023/api/books/filter?category=comingsoon'),
+//         axios.get('http://localhost:5023/api/books/filter?category=bestsellers'),
+//       ]);
+
+//       setNewArrivals(newArrivalsRes.data);
+//       setComingSoon(comingSoonRes.data);
+//       setBestAuthors(bestAuthorsRes.data);
+
+//       if (localStorage.getItem('token')) {
+//         const physicalBooksRes = await axios.get('http://localhost:5023/api/books/physical');
+//         setPhysicalBooks(physicalBooksRes.data);
+//         setIsLoggedIn(true);
+//       } else {
+//         setPhysicalBooks([]); // Clear physical books on logout
+//         setIsLoggedIn(false);
+//       }
+
 //       setLoading(false);
 //     } catch (error) {
-//       console.error('Failed to fetch kitabs:', error);
+//       console.error('Failed to fetch data:', error);
 //       setLoading(false);
 //     }
 //   };
-
 //   useEffect(() => {
-//     fetchBooks(category);
-//   }, [category]);
-
+//     const checkLoginStatus = () => {
+//       const token = localStorage.getItem('token');
+//       const loggedIn = !!token;
+//       setIsLoggedIn(loggedIn);
+//       if (!loggedIn) {
+//         setPhysicalBooks([]); // Clear physical books immediately on logout
+//       }
+//     };
+  
+//     checkLoginStatus();
+  
+//     window.addEventListener('storage', checkLoginStatus);
+//     return () => {
+//       window.removeEventListener('storage', checkLoginStatus);
+//     };
+//   }, []);
+  
+  
+//   useEffect(() => {
+//     fetchBooks();
+//   }, [isLoggedIn]);
+  
 //   return (
 //     <div className="homepage-container">
-//       <h1 className="homepage-title">Book Store 🛍️</h1>
-
-//       <div className="top-bar">
-//         <div className="category-buttons">
-//           {['all', 'bestsellers', 'awardwinners', 'newreleases', 'newarrivals', 'comingsoon', 'deals'].map((cat) => (
-//             <button
-//               key={cat}
-//               onClick={() => setCategory(cat)}
-//               className={`category-button ${category === cat ? 'active' : ''}`}
-//             >
-//               {cat.charAt(0).toUpperCase() + cat.slice(1)}
-//             </button>
-//           ))}
-//         </div>
-
-//         {/* View Toggle */}
-//         <div className="view-toggle">
-//           <button
-//             className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-//             onClick={() => setViewMode('grid')}
-//           >
-//             Grid View
-//           </button>
-//           <button
-//             className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-//             onClick={() => setViewMode('list')}
-//           >
-//             List View
-//           </button>
-//         </div>
+//       {/* View Toggle */}
+//       <div className="view-toggle">
+//         <button className={`view-button ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}>
+//           Grid View
+//         </button>
+//         <button className={`view-button ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>
+//           List View
+//         </button>
 //       </div>
 
-//       {/* Book Display */}
-//       {loading ? (
-//         <p className="loading-text">Loading kitabs...</p>
-//       ) : kitabs.length === 0 ? (
-//         <p className="no-kitabs">No kitabs found.</p>
-//       ) : viewMode === 'grid' ? (
-//         <div className="kitabs-grid">
-//           {kitabs.map((kitab) => (
-          
-//             <div key={kitab.id} className="kitab-card">
-// <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
-//               <h2 className="kitab-title">{kitab.title}</h2>
-//               <p className="kitab-author">by {kitab.author}</p>
-//               <p className="kitab-genre">{kitab.genre}</p>
-//               <p className="kitab-price">${kitab.price}</p>
-//               {kitab.discountPrice > 0 && (
-//                 <p className="kitab-discount">Discount: ${kitab.discountPrice}</p>
-//               )}
-//               {kitab.hasAwards && <span className="kitab-award">🏆 Award Winner</span>}
-//               <button
-//                 className="add-to-cart-btn"
-//                 onClick={() => handleAddToCart(kitab.id)}
-//               >
-//                 🛒 Add to Cart
-//               </button>
-//             </div>
-//           ))}
-//         </div>
-//       ) : (
-//         <div className="kitab-list">
-//           {kitabs.map((kitab) => (
-            
-//             <div key={kitab.id} className="kitab-list-item">
-//               <div>
-//               <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
-//                 <strong>{kitab.title}</strong> by {kitab.author}
-//               </div>
-//               <div>
-//                 <span className="kitab-list-price">${kitab.price}</span>
-//                 {kitab.discountPrice > 0 && (
-//                   <span className="kitab-list-discount"> (Discount: ${kitab.discountPrice})</span>
-//                 )}
-//                 {kitab.hasAwards && <span className="kitab-award"> 🏆</span>}
-//               </div>
-//               <button
-//                 className="add-to-cart-btn"
-//                 onClick={() => handleAddToCart(kitab.id)}
-//               >
-//                 🛒 Add to Cart
-//               </button>
-//             </div>
-//           ))}
-//         </div>
+//       {/* New Arrivals Section */}
+//       <Section title="New Arrivals" books={newArrivals} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
+
+//       {/* Coming Soon Section */}
+//       <Section title="Coming Soon" books={comingSoon} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
+
+//       {/* ✅ Physical Books - Only for Logged In Users */}
+//       {isLoggedIn && (
+//         <Section title="Physical Available Books" books={physicalBooks} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
 //       )}
 //     </div>
 //   );
 // };
 
+// // ✅ Reusable Section Component
+// const Section = ({ title, books, viewMode, loading, onDetails, onAddToCart }) => (
+//   <section className="section">
+//     <h2>{title}</h2>
+//     {loading ? (
+//       <p className="loading-text">Loading kitabs...</p>
+//     ) : books.length === 0 ? (
+//       <p>No kitabs found.</p>
+//     ) : viewMode === 'grid' ? (
+//       <div className="kitabs-grid">
+//         {books.map((kitab) => (
+//           <div key={kitab.id} className="kitab-card" onClick={() => onDetails(kitab.id)}>
+//             <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book" />
+//             <h2>{kitab.title}</h2>
+//             <p>By {kitab.author}</p>
+//             <p>Genre: {kitab.genre}</p>
+//             <p>Price: ${kitab.price}</p>
+//             {kitab.discountPrice > 0 && <p className="discount-price">Discount: ${kitab.discountPrice}</p>}
+//             {kitab.hasAwards && <span className="kitab-award">🏆 Award Winner</span>}
+//             <button onClick={(e) => { e.stopPropagation(); onAddToCart(kitab.id); }}>🛒 Add to Cart</button>
+//           </div>
+//         ))}
+//       </div>
+//     ) : (
+//       <div className="kitab-list">
+//         {books.map((kitab) => (
+//           <div key={kitab.id} className="kitab-list-item" onClick={() => onDetails(kitab.id)}>
+//             <strong>{kitab.title}</strong> by {kitab.author}
+//             <div>
+//               <span className="kitab-list-price">${kitab.price}</span>
+//               {kitab.discountPrice > 0 && (
+//                 <span className="kitab-list-discount"> (Discount: ${kitab.discountPrice})</span>
+//               )}
+//               {kitab.hasAwards && <span className="kitab-award"> 🏆</span>}
+//             </div>
+//             <button className="add-to-cart-btn" onClick={(e) => { e.stopPropagation(); onAddToCart(kitab.id); }}>
+//               🛒 Add to Cart
+//             </button>
+//           </div>
+//         ))}
+//       </div>
+//     )}
+//   </section>
+// );
+
 // export default Home;
+
+// ;
+
+
+
+
+
+
+// import React, { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import './Home.css';
+// import { toast } from 'react-toastify';
+// import { useNavigate } from 'react-router-dom';
+
+// const Home = () => {
+//   const [newArrivals, setNewArrivals] = useState([]);
+//   const [comingSoon, setComingSoon] = useState([]);
+//   const [bestAuthors, setBestAuthors] = useState([]);
+//   const [physicalBooks, setPhysicalBooks] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [viewMode, setViewMode] = useState('grid');
+//   const [cartItems, setCartItems] = useState([]);
+//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//   const [sortBy, setSortBy] = useState('');
+//   const [sortDirection, setSortDirection] = useState('asc');
+  
+//   const navigate = useNavigate();
+
+//   const handleAddToCart = async (BookId) => {
+//     try {
+//       const token = localStorage.getItem('token');
+//       if (!token) {
+//         navigate('/login');
+//         return;
+//       }
+
+//       await axios.post(
+//         'http://localhost:5023/api/user/cart/add',
+//         { BookId, quantity: 1 },
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       const addedBook =
+//         newArrivals.find((book) => book.id === BookId) ||
+//         comingSoon.find((book) => book.id === BookId) ||
+//         physicalBooks.find((book) => book.id === BookId);
+
+//       const updatedCartItems = [...cartItems, { ...addedBook, quantity: 1 }];
+//       setCartItems(updatedCartItems);
+
+//       toast.success(`${addedBook?.title} has been added to your cart.`);
+//       navigate('/cart');
+//     } catch (error) {
+//       console.error('Failed to add to cart:', error);
+//       if (error.response?.status === 401) {
+//         toast.error('Please log in to add kitabs to the cart.');
+//         navigate('/login');
+//       } else {
+//         toast.error('Something went wrong! Please try again later.');
+//       }
+//     }
+//   };
+
+//   const handleNavigateToDetails = (bookId) => {
+//     navigate(`/book/${bookId}`);
+//   };
+
+//   const fetchBooks = async () => {
+//     try {
+//       setLoading(true);
+//       const sortParams = sortBy ? `&sortBy=${sortBy}&sortDirection=${sortDirection}` : '';
+  
+//       const [newArrivalsRes, comingSoonRes, bestAuthorsRes] = await Promise.all([
+//         axios.get(`http://localhost:5023/api/books/filter?category=newarrivals${sortParams}`),
+//         axios.get(`http://localhost:5023/api/books/filter?category=comingsoon${sortParams}`),
+//         axios.get(`http://localhost:5023/api/books/filter?category=bestsellers${sortParams}`),
+//       ]);
+  
+//       setNewArrivals(newArrivalsRes.data);
+//       setComingSoon(comingSoonRes.data);
+//       setBestAuthors(bestAuthorsRes.data);
+  
+//       if (localStorage.getItem('token')) {
+//         const physicalBooksRes = await axios.get(`http://localhost:5023/api/books/physical?${sortParams}`);
+//         setPhysicalBooks(physicalBooksRes.data);
+//         setIsLoggedIn(true);
+//       } else {
+//         setPhysicalBooks([]);
+//         setIsLoggedIn(false);
+//       }
+  
+//       setLoading(false);
+//     } catch (error) {
+//       console.error('Failed to fetch data:', error);
+//       setLoading(false);
+//     }
+//   };
+  
+//   useEffect(() => {
+//     const checkLoginStatus = () => {
+//       const token = localStorage.getItem('token');
+//       const loggedIn = !!token;
+//       setIsLoggedIn(loggedIn);
+//       if (!loggedIn) {
+//         setPhysicalBooks([]); // Clear physical books immediately on logout
+//       }
+//     };
+  
+//     checkLoginStatus();
+  
+//     window.addEventListener('storage', checkLoginStatus);
+//     return () => {
+//       window.removeEventListener('storage', checkLoginStatus);
+//     };
+//   }, []);
+  
+  
+//   useEffect(() => {
+//     fetchBooks();
+//   }, [sortBy, sortDirection, isLoggedIn]);
+  
+//   return (
+//     <div className="homepage-container">
+//       {/* View Toggle */}
+//       <div className="view-toggle">
+//         <button className={`view-button ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}>
+//           Grid View
+//         </button>
+//         <button className={`view-button ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>
+//           List View
+//         </button>
+//       </div>
+//       <div className="sort-controls">
+//   <label>Sort by:</label>
+//   <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+//     <option value="">Default</option>
+//     <option value="title">Title</option>
+//     <option value="price">Price</option>
+//     <option value="publicationDate">Publication Date</option>
+//   </select>
+
+//   <select value={sortDirection} onChange={(e) => setSortDirection(e.target.value)}>
+//     <option value="asc">Ascending</option>
+//     <option value="desc">Descending</option>
+//   </select>
+// </div>
+
+//       {/* New Arrivals Section */}
+//       <Section title="New Arrivals" books={newArrivals} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
+
+//       {/* Coming Soon Section */}
+//       <Section title="Coming Soon" books={comingSoon} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
+
+//       {/* ✅ Physical Books - Only for Logged In Users */}
+//       {isLoggedIn && (
+//         <Section title="Physical Available Books" books={physicalBooks} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
+//       )}
+//     </div>
+//   );
+// };
+
+
+// // ✅ Reusable Section Component
+// const Section = ({ title, books, viewMode, loading, onDetails, onAddToCart }) => (
+//   <section className="section">
+//     <h2>{title}</h2>
+//     {loading ? (
+//       <p className="loading-text">Loading kitabs...</p>
+//     ) : books.length === 0 ? (
+//       <p>No kitabs found.</p>
+//     ) : viewMode === 'grid' ? (
+//       <div className="kitabs-grid">
+//         {books.map((kitab) => (
+//           <div key={kitab.id} className="kitab-card" onClick={() => onDetails(kitab.id)}>
+//             <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book" />
+//             <h2>{kitab.title}</h2>
+//             <p>By {kitab.author}</p>
+//             <p>Genre: {kitab.genre}</p>
+//             <p>Price: ${kitab.price}</p>
+//             {kitab.discountPrice > 0 && <p className="discount-price">Discount: ${kitab.discountPrice}</p>}
+//             {kitab.hasAwards && <span className="kitab-award">🏆 Award Winner</span>}
+//             <button onClick={(e) => { e.stopPropagation(); onAddToCart(kitab.id); }}>🛒 Add to Cart</button>
+//           </div>
+//         ))}
+//       </div>
+//     ) : (
+//       <div className="kitab-list">
+//         {books.map((kitab) => (
+//           <div key={kitab.id} className="kitab-list-item" onClick={() => onDetails(kitab.id)}>
+//             <strong>{kitab.title}</strong> by {kitab.author}
+//             <div>
+//               <span className="kitab-list-price">${kitab.price}</span>
+//               {kitab.discountPrice > 0 && (
+//                 <span className="kitab-list-discount"> (Discount: ${kitab.discountPrice})</span>
+//               )}
+//               {kitab.hasAwards && <span className="kitab-award"> 🏆</span>}
+//             </div>
+//             <button className="add-to-cart-btn" onClick={(e) => { e.stopPropagation(); onAddToCart(kitab.id); }}>
+//               🛒 Add to Cart
+//             </button>
+//           </div>
+//         ))}
+//       </div>
+//     )}
+//   </section>
+// );
+
+// export default Home;
+
+// ;
+
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Home.css';
@@ -179,11 +413,28 @@ const Home = () => {
   const [newArrivals, setNewArrivals] = useState([]);
   const [comingSoon, setComingSoon] = useState([]);
   const [bestAuthors, setBestAuthors] = useState([]);
+  const [physicalBooks, setPhysicalBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('grid');
   const [cartItems, setCartItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [sortBy, setSortBy] = useState('');
+  const [sortDirection, setSortDirection] = useState('asc');
+  
+  // New state variables for filters
+  const [filters, setFilters] = useState({
+    author: '',
+    genre: '',
+    availability: '',
+    priceRange: '',
+    rating: '',
+    language: '',
+    format: '',
+  });
+  
   const navigate = useNavigate();
 
+  // Handle adding to the cart
   const handleAddToCart = async (BookId) => {
     try {
       const token = localStorage.getItem('token');
@@ -192,7 +443,6 @@ const Home = () => {
         return;
       }
 
-      // Make API call to add to cart
       await axios.post(
         'http://localhost:5023/api/user/cart/add',
         { BookId, quantity: 1 },
@@ -203,17 +453,19 @@ const Home = () => {
         }
       );
 
-      // Optionally, update local state for the cart (this will show cart in the UI without navigating)
-      const updatedCartItems = [...cartItems];
-      const addedBook = newArrivals.find((book) => book.id === BookId) || comingSoon.find((book) => book.id === BookId);
-      updatedCartItems.push({ ...addedBook, quantity: 1 });
-      setCartItems(updatedCartItems);  // Update the local cart state
+      const addedBook =
+        newArrivals.find((book) => book.id === BookId) ||
+        comingSoon.find((book) => book.id === BookId) ||
+        physicalBooks.find((book) => book.id === BookId);
+
+      const updatedCartItems = [...cartItems, { ...addedBook, quantity: 1 }];
+      setCartItems(updatedCartItems);
 
       toast.success(`${addedBook?.title} has been added to your cart.`);
-      navigate('/cart');  // Navigate to the cart page
+      navigate('/cart');
     } catch (error) {
       console.error('Failed to add to cart:', error);
-      if (error.response && error.response.status === 401) {
+      if (error.response?.status === 401) {
         toast.error('Please log in to add kitabs to the cart.');
         navigate('/login');
       } else {
@@ -222,21 +474,48 @@ const Home = () => {
     }
   };
 
-  // Fetch kitabs for each category
+  // Navigate to book details
+  const handleNavigateToDetails = (bookId) => {
+    navigate(`/book/${bookId}`);
+  };
+
+  // Fetch books with filters
   const fetchBooks = async () => {
     try {
       setLoading(true);
-      // Fetch New Arrivals
-      const newArrivalsResponse = await axios.get('http://localhost:5023/api/books/filter?category=newarrivals');
-      setNewArrivals(newArrivalsResponse.data);
 
-      // Fetch Coming Soon
-      const comingSoonResponse = await axios.get('http://localhost:5023/api/books/filter?category=comingsoon');
-      setComingSoon(comingSoonResponse.data);
+      const sortParams = sortBy ? `&sortBy=${sortBy}&sortDirection=${sortDirection}` : '';
+      
+      // Prepare filter parameters
+      const filterParams = new URLSearchParams({
+        category: 'all', // or use a dynamic category
+        author: filters.author,
+        genre: filters.genre,
+        availability: filters.availability,
+        priceRange: filters.priceRange,
+        rating: filters.rating,
+        language: filters.language,
+        format: filters.format,
+      }).toString();
 
-      // Fetch Best Authors
-      const authorsResponse = await axios.get('http://localhost:5023/api/books/filter?category=bestsellers');
-      setBestAuthors(authorsResponse.data);
+      const [newArrivalsRes, comingSoonRes, bestAuthorsRes] = await Promise.all([
+        axios.get(`http://localhost:5023/api/books/filter?${filterParams}${sortParams}`),
+        axios.get(`http://localhost:5023/api/books/filter?category=comingsoon&${filterParams}${sortParams}`),
+        axios.get(`http://localhost:5023/api/books/filter?category=bestsellers&${filterParams}${sortParams}`),
+      ]);
+
+      setNewArrivals(newArrivalsRes.data);
+      setComingSoon(comingSoonRes.data);
+      setBestAuthors(bestAuthorsRes.data);
+
+      if (localStorage.getItem('token')) {
+        const physicalBooksRes = await axios.get(`http://localhost:5023/api/books/physical?${filterParams}${sortParams}`);
+        setPhysicalBooks(physicalBooksRes.data);
+        setIsLoggedIn(true);
+      } else {
+        setPhysicalBooks([]);
+        setIsLoggedIn(false);
+      }
 
       setLoading(false);
     } catch (error) {
@@ -245,148 +524,166 @@ const Home = () => {
     }
   };
 
+  // Update filters and fetch books
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters, [name]: value };
+      fetchBooks();
+      return newFilters;
+    });
+  };
+
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token');
+      const loggedIn = !!token;
+      setIsLoggedIn(loggedIn);
+      if (!loggedIn) {
+        setPhysicalBooks([]); // Clear physical books immediately on logout
+      }
+    };
+
+    checkLoginStatus();
+
+    window.addEventListener('storage', checkLoginStatus);
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+    };
+  }, []);
+  
   useEffect(() => {
     fetchBooks();
-  }, []);
-  const handleNavigateToDetails = (bookId) => {
-    navigate(`/book/${bookId}`);
-  };
+  }, [sortBy, sortDirection, filters, isLoggedIn]);
+
   return (
     <div className="homepage-container">
-      {/* <h1 className="homepage-title">Book Store 🛍️</h1> */}
+      {/* Filter Controls */}
+      <div className="filter-controls">
+        <input
+          type="text"
+          name="author"
+          value={filters.author}
+          placeholder="Filter by Author"
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="genre"
+          value={filters.genre}
+          placeholder="Filter by Genre"
+          onChange={handleFilterChange}
+        />
+        {/* <input
+          type="text"
+          name="availability"
+          value={filters.availability}
+          placeholder="Filter by Availability"
+          onChange={handleFilterChange}
+        /> */}
+        {/* <input
+          type="text"
+          name="priceRange"
+          value={filters.priceRange}
+          placeholder="Filter by Price Range"
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="rating"
+          value={filters.rating}
+          placeholder="Filter by Rating"
+          onChange={handleFilterChange}
+        /> */}
+        <input
+          type="text"
+          name="language"
+          value={filters.language}
+          placeholder="Filter by Language"
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="format"
+          value={filters.format}
+          placeholder="Filter by Format"
+          onChange={handleFilterChange}
+        />
+      </div>
 
-      {/* View Toggle */}
-      <div className="view-toggle">
-        <button
-          className={`view-button ${viewMode === 'grid' ? 'active' : ''}`}
-          onClick={() => setViewMode('grid')}
-        >
-          Grid View
-        </button>
-        <button
-          className={`view-button ${viewMode === 'list' ? 'active' : ''}`}
-          onClick={() => setViewMode('list')}
-        >
-          List View
-        </button>
+      {/* Sort Controls */}
+      <div className="sort-controls">
+        <label>Sort by:</label>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="">Default</option>
+          <option value="title">Title</option>
+          <option value="price">Price</option>
+          <option value="publicationDate">Publication Date</option>
+        </select>
+
+        <select value={sortDirection} onChange={(e) => setSortDirection(e.target.value)}>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
       </div>
 
       {/* New Arrivals Section */}
-      <section className="section">
-        <h2>New Arrivals</h2>
-        {loading ? (
-          <p className="loading-text">Loading kitabs...</p>
-        ) : newArrivals.length === 0 ? (
-          <p>No new arrivals found.</p>
-        ) : viewMode === 'grid' ? (
-          <div className="kitabs-grid">
-            {newArrivals.map((kitab) => {
-              return (
-                // <div key={kitab.id} className="kitab-card">
-                <div key={kitab.id} className="kitab-card" onClick={() => handleNavigateToDetails(kitab.id)}>
-                     <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
-                  <h2>{kitab?.title}</h2>
-                  <p>By {kitab?.author}</p>
-                  <p>Genre: {kitab?.genre}</p>
-                  <p>Price: ${kitab?.price}</p>
-                  {kitab?.discountPrice && kitab.discountPrice > 0 && (
-                    <p className="discount-price">
-                      Discount Price: ${kitab?.discountPrice}
-                    </p>
-                  )}
-                  {kitab?.hasAwards && <span className="kitab-award">🏆 Award Winner</span>}
-                  <button onClick={() => handleAddToCart(kitab.id)}>Add to Cart</button>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="kitab-list">
-            {newArrivals.map((kitab) => {
-              return (
-                // <div key={kitab.id} className="kitab-card">
-                <div key={kitab.id} className="kitab-card" onClick={() => handleNavigateToDetails(kitab.id)}>
-                     <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
-                  <h2>{kitab?.title}</h2>
-                  <p>By {kitab?.author}</p>
-                  <p>Genre: {kitab?.genre}</p>
-                  <p>Price: ${kitab?.price}</p>
-                  {kitab?.discountPrice && kitab.discountPrice > 0 && (
-                    <p className="discount-price">
-                      Discount Price: ${kitab?.discountPrice}
-                    </p>
-                  )}
-                  <button onClick={() => handleAddToCart(kitab.id)}>Add to Cart</button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      <Section title="New Arrivals" books={newArrivals} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
 
       {/* Coming Soon Section */}
-      <section className="section">
-        <h2>Coming Soon</h2>
-        {loading ? (
-          <p className="loading-text">Loading kitabs...</p>
-        ) : comingSoon.length === 0 ? (
-          <p>No coming soon kitabs found.</p>
-        ) : viewMode === 'grid' ? (
-          <div className="kitabs-grid">
-            {comingSoon.map((kitab) => {
-              return (
-                // <div key={kitab.id} className="kitab-card">
-                <div key={kitab.id} className="kitab-card" onClick={() => handleNavigateToDetails(kitab.id)}>
-                     <img src={`http://localhost:5023${kitab.imageUrl}`} alt="Book Image" />
-                  <h2>{kitab?.title}</h2>
-                  <p>By {kitab?.author}</p>
-                  <p>Genre: {kitab?.genre}</p>
-                  <p>Price: ${kitab?.price}</p>
-                  {kitab?.discountPrice && kitab.discountPrice > 0 && (
-                    <p className="kitab-discount">Discount: ${kitab?.discountPrice}</p>
-                  )}
-                  {kitab?.hasAwards && <span className="kitab-award">🏆 Award Winner</span>}
-                  <button
-                    onClick={() => handleAddToCart(kitab.id)}
-                  >
-                    🛒 Add to Cart
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="kitab-list">
-            {comingSoon.map((kitab) => {
-              return (
-                // <div key={kitab.id} className="kitab-list-item">
-                <div key={kitab.id} className="kitab-list-item" onClick={() => handleNavigateToDetails(kitab.id)}>
-                  <div>
-                    <strong>{kitab.title}</strong> by {kitab.author}
-                  </div>
-                  <div>
-                    <span className="kitab-list-price">${kitab.price}</span>
-                    {kitab.discountPrice && kitab.discountPrice > 0 && (
-                      <span className="kitab-list-discount"> (Discount: ${kitab.discountPrice})</span>
-                    )}
-                    {kitab.hasAwards && <span className="kitab-award"> 🏆</span>}
-                  </div>
-                  <button
-                    className="add-to-cart-btn"
-                    onClick={() => handleAddToCart(kitab.id)}  
-                  >
-                    🛒 Add to Cart
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      <Section title="Coming Soon" books={comingSoon} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
 
-     
+      {/* Physical Books - Only for Logged In Users */}
+      {isLoggedIn && (
+        <Section title="Physical Available Books" books={physicalBooks} viewMode={viewMode} loading={loading} onDetails={handleNavigateToDetails} onAddToCart={handleAddToCart} />
+      )}
     </div>
   );
 };
+
+// Reusable Section Component
+const Section = ({ title, books, viewMode, loading, onDetails, onAddToCart }) => (
+  <section className="section">
+    <h2>{title}</h2>
+    {loading ? (
+      <p className="loading-text">Loading books...</p>
+    ) : books.length === 0 ? (
+      <p>No books found.</p>
+    ) : viewMode === 'grid' ? (
+      <div className="books-grid">
+        {books.map((book) => (
+          <div key={book.id} className="book-card" onClick={() => onDetails(book.id)}>
+            <img src={`http://localhost:5023${book.imageUrl}`} alt="Book" />
+            <h2>{book.title}</h2>
+            <p>By {book.author}</p>
+            <p>Genre: {book.genre}</p>
+            <p>Price: ${book.price}</p>
+            {book.discountPrice > 0 && <p className="discount-price">Discount: ${book.discountPrice}</p>}
+            {book.hasAwards && <span className="book-award">🏆 Award Winner</span>}
+            <button onClick={(e) => { e.stopPropagation(); onAddToCart(book.id); }}>🛒 Add to Cart</button>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className="book-list">
+        {books.map((book) => (
+          <div key={book.id} className="book-list-item" onClick={() => onDetails(book.id)}>
+            <strong>{book.title}</strong> by {book.author}
+            <div>
+              <span className="book-list-price">${book.price}</span>
+              {book.discountPrice > 0 && (
+                <span className="book-list-discount"> (Discount: ${book.discountPrice})</span>
+              )}
+              {book.hasAwards && <span className="book-award"> 🏆</span>}
+            </div>
+            <button className="add-to-cart-btn" onClick={(e) => { e.stopPropagation(); onAddToCart(book.id); }}>
+              🛒 Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+);
 
 export default Home;

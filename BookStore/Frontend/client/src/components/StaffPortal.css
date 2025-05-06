@@ -186,7 +186,11 @@
     border-radius: 2px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+    
+  .staff-portal__book-image {
+    width: 60px;
+    height: 60px;
+  }
   .staff-portal__book-info {
     display: flex;
     flex-wrap: wrap;

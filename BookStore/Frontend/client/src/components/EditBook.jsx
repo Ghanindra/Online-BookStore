@@ -6,7 +6,7 @@ import './EditBook.css';
 
 const EditBook = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const [bookData, setBookData] = useState({
@@ -96,7 +96,7 @@ const EditBook = () => {
       });
 
       toast.success("Book updated successfully ✅");
-      navigate("/admindashboard");
+      // navigate("/admindashboard");
     } catch (err) {
       console.error(err); // Log the error to understand the exact issue
       toast.error("Failed to update book ❌");

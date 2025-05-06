@@ -1,134 +1,163 @@
-/* Modern Registration Form Styling */
+/* register.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 .forms {
-    max-width: 400px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-      "Helvetica Neue", sans-serif;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 2.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  font-family: 'Poppins', sans-serif;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
- .forms input[type="text"],
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.forms input[type="text"],
 .forms input[type="email"],
-.forms input[type="password"] {
-    display: block;
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    background-color: #f8fafc;
+.forms input[type="password"],
+.forms input[name="fullName"] {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  outline: none;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.forms input:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+  background-color: #fff;
+}
+
+.forms input::placeholder {
+  color: #aaa;
+  font-weight: 300;
+}
+
+.forms label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+  margin: 5px 0;
+}
+
+.forms input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background-color: #f9f9f9;
+}
+
+.forms input[type="checkbox"]:checked {
+  background-color: #6c63ff;
+  border-color: #6c63ff;
+}
+
+.forms input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.forms button[type="submit"] {
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+}
+
+.forms button[type="submit"]:hover {
+  background-color: #5a52d5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(108, 99, 255, 0.3);
+}
+
+.forms button[type="submit"]:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.2);
+}
+
+/* Add a title to the form */
+.forms::before {
+  content: "Create Account";
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .forms {
+    margin: 30px auto;
+    padding: 1.5rem;
+    width: 90%;
   }
   
- .forms input[type="text"]:focus,
- .forms input[type="email"]:focus,
- .forms input[type="password"]:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    background-color: white;
-  }
-  
- .forms input[type="text"]::placeholder,
- .forms input[type="email"]::placeholder,
- .forms input[type="password"]::placeholder {
-    color: #94a3b8;
-  }
-  
-  .forms label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    cursor: pointer;
-    font-size: 0.95rem;
-    color: #334155;
-  }
-  
-  .forms input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    accent-color: #3b82f6;
-    cursor: pointer;
-  }
-  
-  .forms button[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .forms button[type="submit"]:hover {
-    background-color: #2563eb;
-  }
-  
-  .forms button[type="submit"]:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
-  }
-  
-  /* Add a title to the form */
   .forms::before {
-    content: "Create Account";
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: #1e293b;
-    text-align: center;
+    font-size: 22px;
   }
   
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    form {
-      margin: 1rem;
-      padding: 1.5rem;
-    }
+  .forms input[type="text"],
+  .forms input[type="email"],
+  .forms input[type="password"],
+  .forms input[name="fullName"],
+  .forms button[type="submit"] {
+    padding: 12px 14px;
   }
-  
-  /* Animation for form elements */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  form input,
-  form label,
-  form button {
-    animation: fadeIn 0.3s ease-out forwards;
-  }
-  
-  form input:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  form input:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  form input:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-  form label {
-    animation-delay: 0.4s;
-  }
-  form button {
-    animation-delay: 0.5s;
-  }
-  
+}
+
+/* Add styling for react-toastify if needed */
+.Toastify__toast {
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.Toastify__toast--success {
+  background-color: #4caf50;
+}
+
+.Toastify__toast--error {
+  background-color: #f44336;
+}

@@ -333,6 +333,7 @@ const BookDetails = () => {
         <div className="book-format">Paper Back</div>
         <h2>{book.title}</h2>
         <p className="book-author">by {book.author}</p>
+        <p className="book-author">by {book.format}</p>
 
         <div className="book-rating">
           <span className="star">⭐</span>

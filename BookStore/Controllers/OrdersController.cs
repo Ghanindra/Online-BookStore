@@ -351,6 +351,8 @@ public async Task<IActionResult> GetAllUsersOrders(string? claimCode = null)
             o.ClaimCode,
             o.FinalPrice,
             o.IsCanceled,
+            o.IsSupplied,
+            o.SuppliedAt,
             o.UserId,
             Books = o.Books.Select(b => new {
                 b.Id, b.Title, b.Author, b.Price, b.ImageUrl
@@ -370,12 +372,51 @@ public async Task<IActionResult> GetAllUsersOrders(string? claimCode = null)
             o.ClaimCode,
             o.FinalPrice,
             o.IsCanceled,
+            o.IsSupplied,
+             o.SuppliedAt,
             User = users.FirstOrDefault(u => u.Id == o.UserId),
             o.Books
         })
         .ToList();
 
     return Ok(result);
+}
+// [Authorize]
+// [HttpPatch("{id}/supply")]
+// public async Task<IActionResult> MarkAsSupplied(int id)
+// {
+//     var order = await _context.Orders.FindAsync(id);
+//     if (order == null)
+//     {
+//         return NotFound();
+//     }
+
+//     order.IsSupplied = true;
+
+//     try
+//     {
+//         await _context.SaveChangesAsync();
+//         return Ok(new { message = "Order marked as supplied." });
+//     }
+//     catch (Exception ex)
+//     {
+//         return StatusCode(500, new { error = "Failed to update order.", details = ex.Message });
+//     }
+// }
+
+
+[HttpPatch("{id}/supply")]
+public async Task<IActionResult> MarkAsSupplied(int id)
+{
+    var order = await _context.Orders.FindAsync(id);
+    if (order == null) return NotFound();
+
+    order.IsSupplied = true;
+    order.SuppliedAt = DateTime.UtcNow;
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Order marked as supplied." });
 }
 
 

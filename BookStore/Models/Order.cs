@@ -16,6 +16,9 @@ namespace BookStore.Models
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public required string ClaimCode { get; set; }
     public bool IsCanceled { get; set; } = false;
+public bool IsSupplied { get; set; } = false;
+public DateTime? SuppliedAt { get; set; } // nullable
+
     public decimal FinalPrice { get; set; }
 public decimal DiscountAmount { get; set; } = 0; // Add default to avoid null error
 

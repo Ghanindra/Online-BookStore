@@ -86,6 +86,7 @@ const BookCategory = () => {
           {books.map((book) => (
             <Link to={`/book/${book.id}`} key={book.id} style={{ textDecoration: 'none' }}>
               <div style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px" }}>
+              <img src={`http://localhost:5023${book.imageUrl}`} alt={book.title} />
                 <h3>{book.title}</h3>
                 <p><strong>Author:</strong> {book.author}</p>
                 <p><strong>Price:</strong> ${book.price}</p>

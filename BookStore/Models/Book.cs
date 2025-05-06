@@ -22,7 +22,7 @@ namespace BookStore.Models
     public decimal Price { get; set; }
     public int Stock { get; set; }
     public  string? Format { get; set; } // e.g. Paperback, Hardcover, Signed
-    public DateTime PublicationDate { get; set; }
+    public DateTime ?PublicationDate { get; set; }
     public bool IsExclusive { get; set; }
     public bool IsOnSale { get; set; }
     public decimal? DiscountPrice { get; set; }

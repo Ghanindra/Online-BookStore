@@ -36,10 +36,10 @@ const Register = () => {
       <input name="fullName" placeholder="Full Name" onChange={handleChange} required />
       <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
       <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-      <label>
+      {/* <label>
         <input type="checkbox" name="isAdmin" onChange={handleChange} />
         Register as Admin
-      </label>
+      </label> */}
       <button type="submit">Register</button>
     </form>
   );
