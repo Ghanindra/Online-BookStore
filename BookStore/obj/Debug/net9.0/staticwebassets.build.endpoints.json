@@ -987,6 +987,88 @@
       ]
     },
     {
+      "Route": "images/36f91e5c-088a-4a7e-a705-5ff5226de6c2.jpg",
+      "AssetFile": "images/36f91e5c-088a-4a7e-a705-5ff5226de6c2.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9530"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vvJc1eoelLPlWWDXzWpsDTjUbIO9+4e+brcB8Wv8Srw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 16:33:50 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vvJc1eoelLPlWWDXzWpsDTjUbIO9+4e+brcB8Wv8Srw="
+        }
+      ]
+    },
+    {
+      "Route": "images/36f91e5c-088a-4a7e-a705-5ff5226de6c2.yszsldq1ca.jpg",
+      "AssetFile": "images/36f91e5c-088a-4a7e-a705-5ff5226de6c2.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9530"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vvJc1eoelLPlWWDXzWpsDTjUbIO9+4e+brcB8Wv8Srw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 16:33:50 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "yszsldq1ca"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-vvJc1eoelLPlWWDXzWpsDTjUbIO9+4e+brcB8Wv8Srw="
+        },
+        {
+          "Name": "label",
+          "Value": "images/36f91e5c-088a-4a7e-a705-5ff5226de6c2.jpg"
+        }
+      ]
+    },
+    {
       "Route": "images/414225af-6591-4086-a0d2-7821fcb5a6ba.8vztkbt96u.jfif",
       "AssetFile": "images/414225af-6591-4086-a0d2-7821fcb5a6ba.jfif",
       "Selectors": [],

@@ -187,32 +187,7 @@ public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
             return Ok("Order canceled.");
         }
 
-       
-//  [HttpGet("user")]
-// public async Task<IActionResult> GetUserOrders()
-// {
-//     var userIdClaim = User?.FindFirstValue(ClaimTypes.NameIdentifier);
-//     if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
-//     {
-//         _logger.LogWarning("Invalid or missing user ID.");
-//         return Unauthorized("User not authenticated.");
-//     }
 
-//     var orders = await _context.Orders
-//         .Include(o => o.Books)
-//         .Where(o => o.UserId == userId)
-//         .Select(o => new
-//         {
-//             o.Id,
-//             o.ClaimCode,
-//             o.FinalPrice,
-//             o.IsCanceled,
-//             BookTitles = o.Books.Select(b => b.Title).ToList()
-//         })
-//         .ToListAsync();
-
-//     return Ok(orders);
-// }
 [HttpGet("user")]
 public async Task<IActionResult> GetUserOrders()
 {
@@ -247,86 +222,7 @@ public async Task<IActionResult> GetUserOrders()
     return Ok(orders);
 }
 
-// [HttpGet("all")]
-// public async Task<IActionResult> GetAllUsersOrders()
-// {
-//     var orders = await _context.Orders
-//         .Include(o => o.Books) // Include related Books data
-//         // .Include(o => o.users)  // Assuming 'User' is the correct navigation property
-//         .Select(o => new
-//         {
-//             o.Id,
-//             o.ClaimCode,
-//             o.FinalPrice,
-//             o.IsCanceled,
-//             Books = o.Books.Select(b => new
-//             {
-//                 b.Id,
-//                 b.Title,
-//                 b.Author,
-//                 b.Price,
-//                 b.ImageUrl,
-//                 b.Description
-//             }).ToList(),
-//             // User = new
-//             // {
-//             //     o.UserId
-                
-                
-//             // }
-//         })
-//         .ToListAsync();
 
-//     return Ok(orders);
-// }
-// [HttpGet("all")]
-// public async Task<IActionResult> GetAllUsersOrders()
-// {
-//     // Fetch all orders with the UserId
-//     var orders = await _context.Orders
-//         .Include(o => o.Books) // Include related Books data
-//         .Select(o => new
-//         {
-//             o.Id,
-//             o.ClaimCode,
-//             o.FinalPrice,
-//             o.IsCanceled,
-//             o.UserId,  // Fetch UserId to later join
-//             Books = o.Books.Select(b => new
-//             {
-//                 b.Id,
-//                 b.Title,
-//                 b.Author,
-//                 b.Price,
-//                 b.ImageUrl
-//             }).ToList()
-//         })
-//         .ToListAsync();
-
-//     // Fetch all users (you could also add conditions for filtering)
-//     var users = await _context.Users
-//         .Select(u => new
-//         {
-//             u.Id,
-//             u.FullName,
-//             u.Email,
-//             // u.Role // Add other user properties as needed
-//         })
-//         .ToListAsync();
-
-//     // Join the orders with the corresponding user data based on UserId
-//     var ordersWithUsers = orders.Select(order => new
-//     {
-//         order.Id,
-//         order.ClaimCode,
-//         order.FinalPrice,
-//         order.IsCanceled,
-//         User = users.FirstOrDefault(user => user.Id == order.UserId),
-//         Books = order.Books
-//     }).ToList();
-
-//     return Ok(ordersWithUsers); // Return the combined result
-// }
 
 [HttpGet("all")]
 public async Task<IActionResult> GetAllUsersOrders(string? claimCode = null)
@@ -381,28 +277,6 @@ public async Task<IActionResult> GetAllUsersOrders(string? claimCode = null)
 
     return Ok(result);
 }
-// [Authorize]
-// [HttpPatch("{id}/supply")]
-// public async Task<IActionResult> MarkAsSupplied(int id)
-// {
-//     var order = await _context.Orders.FindAsync(id);
-//     if (order == null)
-//     {
-//         return NotFound();
-//     }
-
-//     order.IsSupplied = true;
-
-//     try
-//     {
-//         await _context.SaveChangesAsync();
-//         return Ok(new { message = "Order marked as supplied." });
-//     }
-//     catch (Exception ex)
-//     {
-//         return StatusCode(500, new { error = "Failed to update order.", details = ex.Message });
-//     }
-// }
 
 
 [HttpPatch("{id}/supply")]

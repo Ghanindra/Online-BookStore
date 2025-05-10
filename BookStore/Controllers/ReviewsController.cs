@@ -1,82 +1,85 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Security.Claims;
-// using System.Threading.Tasks;
-// using BookStore.Data;
-// using BookStore.Models;
-// using Microsoft.AspNetCore.Authorization;
-// using Microsoft.AspNetCore.Mvc;
-// using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using BookStore.Data;
+using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-// namespace BookStore.Controllers
-// {
-//     [Authorize]
-// [ApiController]
-// [Route("api/[controller]")]
-// public class ReviewsController : ControllerBase
-// {
-//     private readonly ApplicationDbContext _context;
+namespace BookStore.Controllers
+{
+    [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ReviewController : ControllerBase
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<ReviewController> _logger;
 
-//     public ReviewsController(ApplicationDbContext context)
-//     {
-//         _context = context;
-//     }
+        public ReviewController(ApplicationDbContext context, ILogger<ReviewController> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
 
-//     [HttpPost("{bookId}")]
-// public async Task<IActionResult> AddReview(int bookId, [FromBody] ReviewDTO reviewDto)
-// {
-//     var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-//  // Check if the user has purchased the book
-//             // var hasPurchased = await _context.Orders
-//             //     .AnyAsync(order => order.UserId == userId && order.OrderItems.Any(item => item.BookId == bookId));
+        [HttpPost]
+        public async Task<IActionResult> AddReview([FromBody] Review review)
+        {
+            var userIdClaim = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
 
-//             // if (!hasPurchased)
-//             // {
-//             //     return BadRequest("You must purchase the book before reviewing it.");
-//             // }
-//     //         // Check if the user has purchased the book (check BookOrders table)
-//     // var hasPurchased = await _context.BookOrder
-//     //     .AnyAsync(bookOrder => bookOrder.Order.UserId == userId && bookOrder.BookId == bookId);
+            // ✅ Check if user ordered the book and order is not canceled
+            var hasOrderedBook = await _context.Orders
+                .Where(o => o.UserId == userId && !o.IsCanceled)
+                .AnyAsync(o => o.Books.Any(b => b.Id == review.BookId));
 
-//     // if (!hasPurchased)
-//     // {
-//     //     return BadRequest("You must purchase the book before reviewing it.");
-//     // }
+            if (!hasOrderedBook)
+            {
+                return BadRequest("You can only review books you have successfully ordered.");
+            }
 
-//     var review = new Review
-//     {
-//         BookId = bookId,
-//         UserId = userId,
-//         Rating = reviewDto.Rating,
-//         Comment = reviewDto.Comment,
-//         CreatedAt = DateTime.UtcNow
-//     };
+            // ❗ Optional: Prevent duplicate review for same book by same user
+            var alreadyReviewed = await _context.Reviews
+                .AnyAsync(r => r.UserId == userId && r.BookId == review.BookId);
 
-//     _context.Reviews.Add(review);
-//     await _context.SaveChangesAsync();
+            if (alreadyReviewed)
+            {
+                return BadRequest("You've already reviewed this book.");
+            }
 
-//     return Ok(review);
-// }
-//  // GET: api/reviews/{bookId}
-//         [HttpGet("{bookId}")]
-//         public async Task<IActionResult> GetReviews(int bookId)
-//         {
-//             // Fetch reviews for the given bookId
-//             var reviews = await _context.Reviews
-//                 .Where(review => review.BookId == bookId)
-//                 .Include(review => review.User) // Include User details if needed (optional)
-//                 .ToListAsync();
+            // ✅ Create and save review
+            review.UserId = userId;
+            review.CreatedAt = DateTime.UtcNow;
 
-//             if (reviews == null || reviews.Count == 0)
-//             {
-//                 return NotFound("No reviews found for this book.");
-//             }
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
 
-//             // Return the reviews to the client
-//             return Ok(reviews);
-//         }
+            return Ok("Review submitted successfully.");
+        }
 
-// }
+        [HttpGet("book/{bookId}")]
+        public async Task<IActionResult> GetReviewsForBook(int bookId)
+        {
+            var reviews = await _context.Reviews
+                .Where(r => r.BookId == bookId)
+                .Include(r => r.User)
+                .Select(r => new
+                {
+                    r.Id,
+                    r.Rating,
+                    r.Comment,
+                    r.CreatedAt,
+                    User = new { r.User.FullName }
+                })
+                .ToListAsync();
 
-// }
+            return Ok(reviews);
+        }
+    }
+}
