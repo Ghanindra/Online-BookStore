@@ -18,7 +18,7 @@ namespace BookStore.Models
     public bool IsCanceled { get; set; } = false;
 public bool IsSupplied { get; set; } = false;
 public DateTime? SuppliedAt { get; set; } // nullable
-
+public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public decimal FinalPrice { get; set; }
 public decimal DiscountAmount { get; set; } = 0; // Add default to avoid null error
 

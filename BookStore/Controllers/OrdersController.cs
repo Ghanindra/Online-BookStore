@@ -36,6 +36,137 @@ namespace BookStore.Controllers
         }
 
 
+// [HttpPost]
+// public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
+// {
+//     if (bookIds == null || !bookIds.Any())
+//     {
+//         _logger.LogWarning("No books selected for the order.");
+//         return BadRequest("No books selected.");
+//     }
+
+//     var userIdClaim = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+//     if (string.IsNullOrEmpty(userIdClaim))
+//     {
+//         _logger.LogWarning("User not authenticated.");
+//         return Unauthorized("User not authenticated.");
+//     }
+
+//     if (!int.TryParse(userIdClaim, out int userId))
+//     {
+//         _logger.LogWarning("Invalid user ID: {UserIdClaim}", userIdClaim);
+//         return Unauthorized("Invalid user ID.");
+//     }
+
+//     var user = await _context.Users.FindAsync(userId);
+//     if (user == null)
+//     {
+//         _logger.LogWarning("User not found for ID: {UserId}", userId);
+//         return Unauthorized("User not found.");
+//     }
+
+//     // Fetch CartItems that match the provided bookIds
+//     var cartItems = await _context.CartItems
+//         .Where(ci => bookIds.Contains(ci.BookId) && ci.UserId == userId)
+//         .Include(ci => ci.Book)
+//         .ToListAsync();
+
+//     if (cartItems.Count != bookIds.Count)
+//     {
+//         _logger.LogWarning("Some books not found in the cart. Expected: {ExpectedCount}, Found: {FoundCount}", bookIds.Count, cartItems.Count);
+//         return BadRequest("One or more books not found in the cart.");
+//     }
+//     // NEW: Check stock levels before proceeding
+//     var outOfStockItems = cartItems
+//         .Where(ci => ci.Book.Stock <= 0 || ci.Quantity > ci.Book.Stock)
+//         .Select(ci => new { ci.Book.Title, Available = ci.Book.Stock, Requested = ci.Quantity })
+//         .ToList();
+
+//     if (outOfStockItems.Any())
+//     {
+//         // Build a friendly error message
+//         var msgs = outOfStockItems
+//             .Select(x => 
+//                 x.Available <= 0
+//                   ? $"{x.Title} is out of stock"
+//                   : $"{x.Title} only has {x.Available} left (you requested {x.Requested})"
+//             );
+//         var error = string.Join("; ", msgs);
+//         _logger.LogWarning("Stock validation failed: {Error}", error);
+//         return BadRequest(error);
+//     }
+
+//     // Log prices of books before summing
+//     foreach (var cartItem in cartItems)
+//     {
+//         _logger.LogInformation("Book: {BookTitle}, Price: {Price}, Quantity: {Quantity}",
+//             cartItem.Book.Title, cartItem.Book.Price, cartItem.Quantity);
+//     }
+
+//     // Calculate the total price considering the quantity in the CartItems
+//     decimal totalPrice = cartItems.Sum(ci => ci.Book.Price * ci.Quantity);
+
+//     _logger.LogInformation("Number of books in the cart: {CartItemCount}", cartItems.Count);
+//     _logger.LogInformation("Total price of the order: {TotalPrice}", totalPrice);
+
+//     var finalPrice = _discountService.CalculateDiscount(user, cartItems.Count, totalPrice);
+//     _logger.LogInformation("Total Price: {TotalPrice}, Final Price: {FinalPrice}", totalPrice, finalPrice);
+
+//     var discountamount = totalPrice - finalPrice;
+//     var claimCode = Guid.NewGuid().ToString().Substring(0, 6).ToUpper();
+
+//     var order = new Order
+//     {
+//         UserId = userId,
+//         Member = user,
+//         FinalPrice = finalPrice,
+//          DiscountAmount = discountamount, // ✅ Save discount here
+//         ClaimCode = claimCode,
+//         Books = cartItems.Select(ci => ci.Book).ToList() // Add books to the order
+//     };
+//  // Add order to the database
+//         _context.Orders.Add(order);
+//         await _context.SaveChangesAsync();
+//          // Optionally, return the order details in the response
+       
+//     using (var transaction = await _context.Database.BeginTransactionAsync())
+//     {
+//         try
+//         {
+//             _logger.LogInformation("Placing order for User ID: {UserId}", userId);
+
+// //    await transaction.CommitAsync();
+//             // Update the user's SuccessfulOrderCount after the successful order
+//             user.SuccessfulOrders += 1;
+//             _context.Users.Update(user);
+//             await _context.SaveChangesAsync();
+
+//             // Send confirmation email asynchronously
+//             var emailTask = _emailService.SendEmailAsync(user.Email, "Your Order Confirmation", $"Claim Code: {claimCode}\nTotal: {finalPrice:C}\nOrderId:{order.Id}\nMemberId:{order.MemberId}");
+
+//             await transaction.CommitAsync();
+
+//             // Wait for email to be sent asynchronously
+//             await emailTask;
+
+//             _logger.LogInformation("Order placed successfully. Order ID: {OrderId}, Claim Code: {ClaimCode}", order.Id, claimCode);
+
+//             return Ok(new { orderId = order.Id, claimCode });
+//         }
+//         catch (Exception ex)
+//         {
+//             // Log the exception for debugging purposes
+//             _logger.LogError(ex, "Error placing order for User ID: {UserId}", userId);
+//  await transaction.RollbackAsync(); // Rollback the transaction on error
+//         _logger.LogError(ex, "Error placing order for User ID: {UserId}", userId);
+//             // Return a generic error message to the user
+//             return StatusCode(500, "An error occurred while processing your order.");
+//         }
+//     }
+// }
+
+
+
 [HttpPost]
 public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
 {
@@ -77,6 +208,26 @@ public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
         return BadRequest("One or more books not found in the cart.");
     }
 
+    // NEW: Check stock levels before proceeding
+    var outOfStockItems = cartItems
+        .Where(ci => ci.Book.Stock <= 0 || ci.Quantity > ci.Book.Stock)
+        .Select(ci => new { ci.Book.Title, Available = ci.Book.Stock, Requested = ci.Quantity })
+        .ToList();
+
+    if (outOfStockItems.Any())
+    {
+        // Build a friendly error message
+        var msgs = outOfStockItems
+            .Select(x => 
+                x.Available <= 0
+                  ? $"{x.Title} is out of stock"
+                  : $"{x.Title} only has {x.Available} left (you requested {x.Requested})"
+            );
+        var error = string.Join("; ", msgs);
+        _logger.LogWarning("Stock validation failed: {Error}", error);
+        return BadRequest(error);
+    }
+
     // Log prices of books before summing
     foreach (var cartItem in cartItems)
     {
@@ -101,22 +252,22 @@ public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
         UserId = userId,
         Member = user,
         FinalPrice = finalPrice,
-         DiscountAmount = discountamount, // ✅ Save discount here
+        DiscountAmount = discountamount, // ✅ Save discount here
         ClaimCode = claimCode,
         Books = cartItems.Select(ci => ci.Book).ToList() // Add books to the order
     };
- // Add order to the database
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
-         // Optionally, return the order details in the response
-       
+
+    // Start transaction to ensure order and user updates are atomic
     using (var transaction = await _context.Database.BeginTransactionAsync())
     {
         try
         {
             _logger.LogInformation("Placing order for User ID: {UserId}", userId);
 
-//    await transaction.CommitAsync();
+            // Add order to the database
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
             // Update the user's SuccessfulOrderCount after the successful order
             user.SuccessfulOrders += 1;
             _context.Users.Update(user);
@@ -138,13 +289,12 @@ public async Task<IActionResult> PlaceOrder([FromBody] List<int> bookIds)
         {
             // Log the exception for debugging purposes
             _logger.LogError(ex, "Error placing order for User ID: {UserId}", userId);
- await transaction.RollbackAsync(); // Rollback the transaction on error
-        _logger.LogError(ex, "Error placing order for User ID: {UserId}", userId);
-            // Return a generic error message to the user
+            await transaction.RollbackAsync(); // Rollback the transaction on error
             return StatusCode(500, "An error occurred while processing your order.");
         }
     }
 }
+
 
         [HttpPut("cancel/{id}")]
         public async Task<IActionResult> CancelOrder(int id)
@@ -207,6 +357,7 @@ public async Task<IActionResult> GetUserOrders()
             o.ClaimCode,
             o.FinalPrice,
             o.IsCanceled,
+            o.IsSupplied,
             Books = o.Books.Select(b => new
             {
                 b.Id,

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -195,7 +194,14 @@ const CartPage = () => {
         toast.success(`Order placed! Code: ${data.claimCode}`);
       } catch (err) {
         console.error(err);
-        toast('Error placing order.');
+        if (err.response && err.response.status === 400) {
+          // Extract and display the error message from the backend
+          const errorMsg = err.response.data.message || err.response.data; // Handle plain text or JSON error
+          toast.error(`Order Error: ${errorMsg}`); // Display the error message
+        } else {
+          toast.error('An error occurred while placing the order.');
+        }
+     
       }
     };
     const placeOrder = async (selectedBooks) => {
@@ -224,16 +230,18 @@ const CartPage = () => {
         toast.success(`Order placed successfully! Order ID: ${orderId}, Claim Code: ${claimCode}`);
       } catch (err) {
         // Handle error
-        console.error(err);
+        console.error('Error placing order:', err);
+    
         if (err.response && err.response.status === 400) {
-          alert('Error: One or more books not found.');
-        } else if (err.response && err.response.status === 401) {
-          alert('Error: User not authenticated.');
+          // Extract and display the error message from the backend
+          const errorMsg = err.response.data.message || err.response.data; // Handle plain text or JSON error
+          toast.error(`Order Error: ${errorMsg}`); // Display the error message
         } else {
-          alert('An error occurred while placing the order.');
+          toast.error('An error occurred while placing the order.');
         }
       }
     };
+    
     const fetchOrders = async () => {
       const token = localStorage.getItem('token');
       try {
@@ -342,14 +350,7 @@ const CartPage = () => {
               </li>
             ))}
           </ul>
-          {/* {orders.map((order) => (
-  <li key={order.id}>
-    Order #{order.id} - Status: {order.isCanceled ? 'Canceled' : 'Active'}
-    {!order.isCanceled && (
-      <button onClick={() => cancelOrder(order.id)}>Cancel Order</button>
-    )}
-  </li>
-))} */}
+         
 {/* … inside your return() … */}
 <ul className="orders-list">
   {orders
@@ -393,7 +394,7 @@ const CartPage = () => {
               <img src={`http://localhost:5023${book.imageUrl}`} alt="Book Image" onClick={() =>  viewBookDetails(book.id)} />
               <div>
                 <strong>{book.title}</strong> <br />
-                Price: ${book.Price > 0 ? book.Price : book.Price}
+                Price: ${book.price }
               </div>
               <button onClick={() => addToCart(book.id,book.title)} className="add-to-cart-btn">
                 Add to Cart

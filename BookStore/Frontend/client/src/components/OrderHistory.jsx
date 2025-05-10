@@ -84,67 +84,67 @@ import './OrderHistory.css';
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
-  const [error, setError] = useState('');
+  const [fetchError, setFetchError] = useState('');
   const [reviewData, setReviewData] = useState({});
   const [activeBookId, setActiveBookId] = useState(null);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [reviewError, setReviewError] = useState('');
+  const [reviewSuccess, setReviewSuccess] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     if (!token) {
-      setError('User not authenticated.');
+      setFetchError('User not authenticated.');
       return;
     }
 
-    axios.get(`http://localhost:5023/api/orders/user`, {
+    axios.get('http://localhost:5023/api/orders/user', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setOrders(res.data))
-    .catch(err => setError(err.response?.data || 'Failed to fetch order history.'));
+    .catch(err => setFetchError(err.response?.data || 'Failed to fetch order history.'));
   }, []);
 
   const openReviewForm = (bookId) => {
     setActiveBookId(bookId);
     setReviewData({ rating: 5, comment: '' });
-    setSuccessMessage('');
+    setReviewError('');
+    setReviewSuccess('');
   };
 
   const submitReview = async (bookId) => {
-    // Client-side validation
+    setReviewError('');
+    setReviewSuccess('');
+
     if (!reviewData.comment || reviewData.comment.trim() === '') {
-      setError('Comment cannot be empty.');
+      setReviewError('Comment cannot be empty.');
       return;
     }
+
     const token = localStorage.getItem('token');
+    const payload = {
+      bookId,
+      rating: parseInt(reviewData.rating, 10),
+      comment: reviewData.comment.trim()
+    };
+
     try {
-      setError('');
-      // Ensure rating is a number
-      const payload = {
-        bookId,
-        rating: parseInt(reviewData.rating, 10),
-        comment: reviewData.comment.trim()
-      };
-      console.log('Submitting review payload:', payload);
       await axios.post(
-        `http://localhost:5023/api/review`,
+        'http://localhost:5023/api/review',
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setSuccessMessage('Review submitted successfully!');
-      toast.success("Review Successful")
+      setReviewSuccess('Review submitted successfully!');
+      toast.success('Review submitted successfully!');
       setActiveBookId(null);
     } catch (err) {
-      console.error('Review submission error:', err.response?.data);
-      // Parse and display server validation errors
       const serverError = err.response?.data;
       if (serverError?.errors) {
-        const fieldErrors = Object.values(serverError.errors).flat();
-        setError(fieldErrors.join(' '));
+        const msgs = Object.values(serverError.errors).flat();
+        setReviewError(msgs.join(' '));
       } else if (typeof serverError === 'string') {
-        setError(serverError);
+        setReviewError(serverError);
       } else {
-        setError('Failed to submit review.');
+        setReviewError('Failed to submit review.');
       }
     }
   };
@@ -158,8 +158,7 @@ const OrderHistory = () => {
     <div className="order-history">
       <h2 className="order-history__title">🛒 Order History</h2>
 
-      {error && <p className="order-history__error">{error}</p>}
-      {successMessage && <p className="order-history__success">{successMessage}</p>}
+      {fetchError && <p className="order-history__error">{fetchError}</p>}
 
       {orders.length === 0 ? (
         <p className="order-history__empty">No orders found.</p>
@@ -171,8 +170,8 @@ const OrderHistory = () => {
                 Order #{order.id} - Claim Code: {order.claimCode}
               </h3>
               <p className="order-history__status">
-                Status: <span className={`order-history__status-badge ${order.isCanceled ? 'order-history__status-badge--canceled' : 'order-history__status-badge--completed'}`}>
-                  {order.isCanceled ? 'Canceled' : 'Completed'}
+                Status: <span className={`order-history__status-badge ${order.isCanceled ? 'order-history__status-badge--canceled' : (order.isSupplied ? 'order-history__status-badge--completed' : 'order-history__status-badge--pending')}`}>
+                  {order.isCanceled ? 'Canceled' : (order.isSupplied ? 'Completed' : 'Pending')}
                 </span>
               </p>
               <p className="order-history__price">Total: ${order.finalPrice.toFixed(2)}</p>
@@ -185,12 +184,14 @@ const OrderHistory = () => {
                       <strong className="order-history__book-title">{book.title}</strong>
                       <span className="order-history__book-author">by {book.author}</span>
                       <span className="order-history__book-price">${book.price.toFixed(2)}</span>
-                      <button
-                        className="order-history__review-button"
-                        onClick={() => openReviewForm(book.id)}
-                      >
-                        📝 Review
-                      </button>
+                      {order.isSupplied && !order.isCanceled && (
+                        <button
+                          className="order-history__review-button"
+                          onClick={() => openReviewForm(book.id)}
+                        >
+                          📝 Review
+                        </button>
+                      )}
                     </div>
 
                     {activeBookId === book.id && (
@@ -216,20 +217,18 @@ const OrderHistory = () => {
                             placeholder="Write your review..."
                           />
                         </label>
+                        {reviewError && <p className="order-history__error">{reviewError}</p>}
+                        {reviewSuccess && <p className="order-history__success">{reviewSuccess}</p>}
                         <div className="order-history__review-actions">
-                          <button onClick={() => submitReview(book.id)}>
-                            Submit
-                          </button>
-                          <button onClick={() => setActiveBookId(null)}>
-                            Cancel
-                          </button>
+                          <button onClick={() => submitReview(book.id)}>Submit</button>
+                          <button onClick={() => setActiveBookId(null)}>Cancel</button>
                         </div>
                       </div>
                     )}
 
                     {book.imageUrl && (
                       <img
-                        src={book.imageUrl}
+                        src={`http://localhost:5023${book.imageUrl}`}
                         alt={book.title}
                         className="order-history__book-image"
                       />

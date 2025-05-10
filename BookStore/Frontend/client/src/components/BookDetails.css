@@ -324,7 +324,79 @@
   .add-to-cart-btn:active {
     transform: translateY(0);
   }
-  
+  /* Container for all reviews */
+.reviews-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Heading */
+.reviews-section > h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+/* List wrapper */
+.reviews-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual review item */
+.review-item {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Last item: no border */
+.review-item:last-child {
+  border-bottom: none;
+}
+
+/* Review header: name + stars */
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Reviewer name */
+.review-header strong {
+  font-size: 1rem;
+  color: #222;
+}
+
+/* Star rating */
+.review-rating {
+  font-size: 1rem;
+  color: #f5a623; /* golden stars */
+}
+
+/* Comment text */
+.review-comment {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+/* Date stamp */
+.review-date {
+  font-size: 0.8rem;
+  color: #777;
+  align-self: flex-end;
+}
+
   /* Responsive design */
   @media (max-width: 992px) {
     .book-details-container {
