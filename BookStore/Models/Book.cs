@@ -26,13 +26,17 @@ namespace BookStore.Models
     public bool IsExclusive { get; set; }
     public bool IsOnSale { get; set; }
     public decimal? DiscountPrice { get; set; }
+          public decimal? DiscountPercentage { get;set; }
     public DateTime? SaleStart { get; set; }
     public DateTime? SaleEnd { get; set; }       
-    [BindNever]          
+    [BindNever]      
+
+   
     public int SalesCount { get; set; }      // For Bestsellers
 public bool HasAwards { get; set; }      // For Award Winners
 [BindNever]
-public DateTime CreatedAt { get; set; }  // For New Arrivals
+// public DateTime CreatedAt { get; set; }  // For New Arrivals
+public DateTime CreatedAt { get; set; } 
  public bool InStock { get; set; }
     public bool IsPhysicalAccessAvailable { get; set; }
     [MaxLength(1000)] // or use [StringLength(1000)]
@@ -47,7 +51,8 @@ public DateTime CreatedAt { get; set; }  // For New Arrivals
 public ICollection<OrderBook>? OrderBooks { get; set; }  // <-- Properly defined collection    }
 
    public ICollection<BookOrder>? BookOrders { get; set; } // This must be a collection
-      //   public object OrderBooks { get; internal set; }
-      // public object OrderBooks { get; set; }
+  
+        //   public object OrderBooks { get; internal set; }
+        // public object OrderBooks { get; set; }
     }
 }

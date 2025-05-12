@@ -214,7 +214,12 @@ public async Task<IActionResult> GetBookmarks()
 
     return Ok(bookmarks);
 }
-
+[HttpGet("count")]
+public async Task<IActionResult> GetTotalUsers()
+{
+    var totalUsers = await _context.Users.CountAsync();
+    return Ok(totalUsers);
+}
     }
 
     // DTOs

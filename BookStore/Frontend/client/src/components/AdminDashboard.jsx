@@ -245,6 +245,8 @@ import Sidebar from './Sidebar';
 import TotalStats from './TotalStats';
 import AddBook from './AddBook';
 import ViewBook from './ViewBook';
+import CreateBanner from './CreateBanner';
+
 import './admin.css'; // You can create your own styles
 
 const AdminDashboard = () => {
@@ -256,8 +258,11 @@ const AdminDashboard = () => {
         return <AddBook />;
       case "view":
         return <ViewBook />;
+        case "banner":
+        return <CreateBanner />;
+         
       default:
-        // return <TotalStats />;
+        return <TotalStats />;
     }
   };
 

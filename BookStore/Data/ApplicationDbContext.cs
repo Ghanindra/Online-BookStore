@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BookStore.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using BookStore.Services;
 
 namespace BookStore.Data
 {
@@ -19,6 +20,7 @@ public class ApplicationDbContext : DbContext
  public DbSet<CartItem> CartItems { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Review> Reviews { get; set; }
+       public DbSet<Banner> Banners { get; set; }
       public DbSet<BookOrder> BookOrders { get; set; }  // Add this
     // public DbSet<OrderBook> OrderBooks { get; set; }
 
@@ -28,7 +30,19 @@ public DbSet<Bookmarks> Bookmarks { get; set; }
     {
         
         base.OnModelCreating(modelBuilder);
+  modelBuilder.Entity<Order>()
+        .Property(o => o.SuppliedAt)
+        .HasConversion(
+            v => v.HasValue ? v.Value.ToUniversalTime() : (DateTime?)null, // Convert to UTC when saving
+            v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null // Ensure UTC when reading
+        );
 
+    modelBuilder.Entity<Book>()
+        .Property(b => b.CreatedAt)
+        .HasConversion(
+            v => v.ToUniversalTime(),
+            v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+        );
         modelBuilder.Entity<Book>().ToTable("Books");
         modelBuilder.Entity<Order>().ToTable("Orders");
 
@@ -97,6 +111,7 @@ public DbSet<Bookmarks> Bookmarks { get; set; }
             .HasForeignKey(o => o.UserId);  // Foreign Key
 
     }
+    
     
 }
 public static class DbInitializer

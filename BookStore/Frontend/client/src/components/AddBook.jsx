@@ -44,42 +44,51 @@ const AddBook = () => {
   const handleFileChange = (e) => {
     setImageFile(e.target.files[0]);
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const data = new FormData();
 
-    const data = new FormData();
+  // Convert datetime-local fields to UTC
+  const utcFormData = { ...formData };
+  if (formData.publicationDate) {
+    utcFormData.publicationDate = new Date(formData.publicationDate).toISOString();
+  }
+  if (formData.saleStart) {
+    utcFormData.saleStart = new Date(formData.saleStart).toISOString();
+  }
+  if (formData.saleEnd) {
+    utcFormData.saleEnd = new Date(formData.saleEnd).toISOString();
+  }
 
-    for (let key in formData) {
-      if (formData[key] !== null && formData[key] !== '') {
-        data.append(key, formData[key]);
-      }
+  for (let key in utcFormData) {
+    if (utcFormData[key] !== null && utcFormData[key] !== '') {
+      data.append(key, utcFormData[key]);
     }
+  }
 
-    if (imageFile) {
-      data.append("image", imageFile);
-    }
+  if (imageFile) {
+    data.append("image", imageFile);
+  }
 
-    try {
-      const token = localStorage.getItem('token');
-      console.log("token",token);
-      
-      const res = await axios.post("http://localhost:5023/api/admin/book", data, {
-        headers: { "Content-Type": "multipart/form-data" , 
-          
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("Book submitted:", res.data);
-      alert("Book submitted successfully!");
-navigate('/admindashboard')
-    } catch (err) {
-      console.error(" Submission error:", err.response?.data || err.message);
-      alert("Error submitting book.");
-    }
-  };
+  try {
+    const token = localStorage.getItem('token');
+    console.log("FormData being sent:", [...data.entries()]);
 
+    const res = await axios.post("http://localhost:5023/api/admin/book", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Book submitted:", res.data);
+    alert("Book submitted successfully!");
+    navigate('/admindashboard');
+  } catch (err) {
+    console.error("Submission error:", err.response?.data || err.message);
+    alert("Error submitting book.");
+  }
+};
   return (
     <form className="add-book" onSubmit={handleSubmit} encType="multipart/form-data">
       <h2 className="add-book__title">Add Book</h2>

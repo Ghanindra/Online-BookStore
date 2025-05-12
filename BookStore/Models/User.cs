@@ -22,6 +22,7 @@ namespace BookStore.Models
     // Navigation property for Orders
     public List<Order> Orders { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+      
         // public object UserName { get; internal set; }
     }
 

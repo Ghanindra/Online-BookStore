@@ -102,7 +102,9 @@ const BookDetails = () => {
         <div className="book-synopsis">
           <h3>Synopsis</h3>
           <p>{book.description || "A guide to self-discovery and inner peace."}</p>
+            <p>Stock:{book.stock }</p>
         </div>
+           <p>ISBN:{book.isbn }</p>
       </div>
 
       <div className="purchase-section">

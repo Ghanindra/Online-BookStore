@@ -33,57 +33,7 @@ namespace BookStore.Controllers
             return Ok(book);
         }
 
-// [HttpGet("filter")]
-// public async Task<IActionResult> FilterBooks(string? category, string? sortBy, string? sortDirection = "asc")
-// {
-//     var now = DateTime.UtcNow;
-//     var query = _context.Books.Include(b => b.Reviews).AsQueryable();
 
-//     switch (category?.ToLower())
-//     {
-//         case "bestsellers":
-//             query = query.OrderByDescending(b => b.SalesCount);
-//             break;
-//         case "awardwinners":
-//             query = query.Where(b => b.HasAwards == true);
-//             break;
-//         case "newreleases":
-//             query = query.Where(b => b.PublicationDate <= now);
-//             break;
-//         case "newarrivals":
-//             query = query.Where(b => b.PublicationDate >= now.AddMonths(-1));
-//             break;
-//         case "comingsoon":
-//             query = query.Where(b => b.PublicationDate > now);
-//             break;
-//         case "deals":
-//             query = query.Where(b => b.DiscountPrice > 0);
-//             break;
-//         case "all":
-//         default:
-//             break;
-//     }
-
-//     // Apply Sorting
-//     if (!string.IsNullOrEmpty(sortBy))
-//     {
-//         switch (sortBy.ToLower())
-//         {
-//             case "title":
-//                 query = sortDirection == "desc" ? query.OrderByDescending(b => b.Title) : query.OrderBy(b => b.Title);
-//                 break;
-//             case "price":
-//                 query = sortDirection == "desc" ? query.OrderByDescending(b => b.Price) : query.OrderBy(b => b.Price);
-//                 break;
-//             case "publicationdate":
-//                 query = sortDirection == "desc" ? query.OrderByDescending(b => b.PublicationDate) : query.OrderBy(b => b.PublicationDate);
-//                 break;
-//         }
-//     }
-
-//     var books = await query.ToListAsync();
-//     return Ok(books);
-// }
 
 
 [HttpGet]
@@ -105,6 +55,7 @@ public async Task<IActionResult> GetBooks(
     string? sortDirection = "asc"
 )
 {
+     Console.WriteLine($"Title: {title}, ISBN: {isbn}, Description: {description}");
     var query = _context.Books
         .Include(b => b.Reviews)
         .AsQueryable();
@@ -145,6 +96,9 @@ public async Task<IActionResult> GetBooks(
     if (inStock.HasValue)
         query = query.Where(b => b.InStock == inStock);
 
+        
+
+
     if (isPhysical.HasValue)
         query = query.Where(b => b.IsPhysicalAccessAvailable == isPhysical);
 
@@ -169,6 +123,8 @@ public async Task<IActionResult> GetBooks(
     var books = await query.ToListAsync();
     return Ok(books);
 }
+
+
 [HttpGet("filter")]
 public async Task<IActionResult> FilterBooks(
     string? category, 
@@ -281,5 +237,53 @@ public async Task<IActionResult> GetPhysicalBooks()
     return Ok(books);
 }
 
+[HttpGet("deals")]
+public async Task<IActionResult> GetBooksOnSale()
+{
+    // Get the current UTC time
+    var currentTime = DateTime.UtcNow;
+
+    // Automatically remove expired sales
+    var expiredSales = await _context.Books
+        .Where(b => b.IsOnSale && b.SaleEnd.HasValue && b.SaleEnd <= currentTime)
+        .ToListAsync();
+
+    foreach (var book in expiredSales)
+    {
+        book.IsOnSale = false;
+        book.DiscountPercentage = null;
+        book.DiscountPrice = null;
     }
+
+    if (expiredSales.Any())
+    {
+        await _context.SaveChangesAsync();
+    }
+
+    // Fetch active sales
+    var books = await _context.Books
+        .Where(b => b.IsOnSale && b.DiscountPercentage.HasValue && b.DiscountPercentage > 0 && b.SaleEnd > currentTime)
+        .ToListAsync();
+
+    return Ok(books);
+}
+   [HttpGet("banners")]
+public async Task<IActionResult> GetActiveBanners()
+{
+    var currentTime = DateTime.UtcNow;
+
+    var banners = await _context.Banners
+        .Where(b => b.IsActive && b.StartTime <= currentTime && b.EndTime >= currentTime)
+        .ToListAsync();
+
+    return Ok(banners);
+}
+[HttpGet("count")]
+public async Task<IActionResult> GetTotalBooks()
+{
+    var totalBooks = await _context.Books.CountAsync();
+    return Ok(totalBooks);
+}
+    }
+    
 }

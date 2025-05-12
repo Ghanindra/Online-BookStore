@@ -6,7 +6,7 @@ import './EditBook.css';
 
 const EditBook = () => {
   const { id } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const [bookData, setBookData] = useState({

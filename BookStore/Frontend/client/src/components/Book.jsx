@@ -9,9 +9,15 @@ const Book = () => {
 
   // Extract query parameters for title, description, and ISBN
   const params = new URLSearchParams(location.search);
+  console.log("Query string:", params);
+
   const title = params.get("title");
   const description = params.get("description");
   const isbn = params.get("isbn");
+
+  console.log("Title:", title);
+  console.log("Description:", description);
+  console.log("ISBN:", isbn);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -20,8 +26,8 @@ const Book = () => {
           params: {
             title: title,
             description: description,
-            isbn: isbn
-          }
+            isbn: isbn,
+          },
         });
 
         console.log('Response:', response);
@@ -49,7 +55,7 @@ const Book = () => {
       {books.length > 0 ? (
         books.map((book) => (
           <div key={book.id} className="book-result-card">
-             <img src={`http://localhost:5023${book.imageUrl}`} alt="Book" />
+            <img src={`http://localhost:5023${book.imageUrl}`} alt="Book" />
             <h4 className="book-title">{book.title}</h4>
             <p className="book-author">Author: {book.author}</p>
             <p className="book-isbn">ISBN: {book.isbn}</p> {/* Display ISBN */}

@@ -1,77 +1,102 @@
-/* Modern Bookstore Homepage Styling */
+/* Home.css - Professional Bookstore Homepage Styling */
+
+/* Base Styles & Variables */
 :root {
-  --primary: #2a3990;
-  --primary-light: #4a5ab0;
-  --secondary: #f97b22;
-  --secondary-light: #ffa94d;
-  --text-dark: #333333;
-  --text-light: #666666;
-  --background: #f9f9f9;
-  --card-bg: #ffffff;
-  --border-color: #e0e0e0;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --primary: #4a6fa5;
+  --primary-dark: #3a5a8c;
+  --secondary: #6c5ce7;
+  --accent: #ff7675;
+  --success: #00b894;
+  --danger: #d63031;
+  --warning: #fdcb6e;
+  --light: #f8f9fa;
+  --dark: #2d3436;
+  --gray: #636e72;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   --radius: 8px;
   --transition: all 0.3s ease;
 }
 
-/* Base Styles */
+/* Main Layout */
 .homepage-container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  background-color: var(--background);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: var(--text-dark);
-}
-
-/* Section Styling */
-.section {
-  margin-bottom: 3rem;
   padding: 1rem;
-  border-radius: var(--radius);
-  background-color: var(--card-bg);
-  box-shadow: var(--shadow);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: var(--dark);
 }
 
-.section h2 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--primary-light);
+/* Banner Section with Continuous Movement */
+.banner-section {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+  position: relative;
+  box-shadow: var(--shadow);
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.banner {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 20px;
+  animation: banner-scroll 20s linear infinite;
+  position: absolute;
+}
+
+.banner p {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes banner-scroll {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100vw);
+  }
 }
 
 /* Filter Controls */
 .filter-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  padding: 1.25rem;
-  background-color: var(--card-bg);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background-color: white;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
 .filter-controls input {
   flex: 1;
-  min-width: 180px;
+  min-width: 200px;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  font-size: 0.9rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 30px;
+  font-size: 0.95rem;
   transition: var(--transition);
 }
 
 .filter-controls input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(42, 57, 144, 0.2);
+  box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
 }
 
 .filter-controls input::placeholder {
-  color: var(--text-light);
+  color: #aaa;
 }
 
 /* Sort Controls */
@@ -81,23 +106,23 @@
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
-  padding: 1rem 1.25rem;
-  background-color: var(--card-bg);
+  padding: 1rem 1.5rem;
+  background-color: white;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
 .sort-controls label {
   font-weight: 600;
-  color: var(--text-dark);
+  color: var(--dark);
 }
 
 .sort-controls select {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
+  border: 1px solid #e0e0e0;
+  border-radius: 30px;
   background-color: white;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: var(--transition);
 }
@@ -105,87 +130,130 @@
 .sort-controls select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(42, 57, 144, 0.2);
+  box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+}
+
+/* Section Styling */
+.section {
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.section h2 {
+  font-size: 1.75rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f0f0f0;
+  position: relative;
+}
+
+.section h2:after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
 }
 
 /* Grid View */
 .books-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .book-card {
-  position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--card-bg);
+  background-color: white;
   border-radius: var(--radius);
   overflow: hidden;
-  transition: var(--transition);
-  cursor: pointer;
-  height: 100%;
   box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  height: 100%;
+  cursor: pointer;
 }
 
 .book-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 .book-card img {
   width: 100%;
   height: 250px;
   object-fit: cover;
-  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.book-card:hover img {
+  transform: scale(1.05);
 }
 
 .book-card h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0.75rem 1rem 0.25rem;
-  color: var(--text-dark);
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+  padding: 0 1rem;
+  color: var(--dark);
+  line-height: 1.4;
   border-bottom: none;
 }
 
+.book-card h2:after {
+  display: none;
+}
+
 .book-card p {
-  margin: 0.25rem 1rem;
+  margin: 0.25rem 0;
+  padding: 0 1rem;
   font-size: 0.9rem;
-  color: var(--text-light);
-}
-
-.book-card .discount-price {
-  color: var(--secondary);
-  font-weight: 600;
-}
-
-.book-award {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: var(--secondary);
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  color: var(--gray);
 }
 
 .book-card button {
-  margin: auto 1rem 1rem;
-  padding: 0.6rem 0;
+  margin: 1rem;
+  margin-top: auto;
+  padding: 0.75rem 1rem;
   background-color: var(--primary);
   color: white;
   border: none;
-  border-radius: var(--radius);
+  border-radius: 30px;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: var(--transition);
-  margin-top: auto;
 }
 
 .book-card button:hover {
-  background-color: var(--primary-light);
+  background-color: var(--primary-dark);
+}
+
+/* Sale Badge */
+.sale-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--accent);
+  color: white;
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
+}
+
+/* Discount Price */
+.discount-price {
+  color: var(--accent) !important;
+  font-weight: 600 !important;
 }
 
 /* List View */
@@ -200,26 +268,34 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: var(--card-bg);
+  background-color: #f9f9f9;
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  cursor: pointer;
   transition: var(--transition);
+  cursor: pointer;
 }
 
 .book-list-item:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  background-color: #f0f0f0;
+}
+
+.book-list-item strong {
+  color: var(--dark);
+  margin-right: 0.5rem;
 }
 
 .book-list-price {
   font-weight: 600;
-  color: var(--primary);
+  color: var(--dark);
 }
 
 .book-list-discount {
-  color: var(--secondary);
+  color: var(--accent);
   font-weight: 600;
+}
+
+.sale-label {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .add-to-cart-btn {
@@ -227,60 +303,76 @@
   background-color: var(--primary);
   color: white;
   border: none;
-  border-radius: var(--radius);
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: var(--transition);
+  margin-left: 1rem;
 }
 
 .add-to-cart-btn:hover {
-  background-color: var(--primary-light);
+  background-color: var(--primary-dark);
 }
 
 /* Loading State */
 .loading-text {
   text-align: center;
   padding: 2rem;
-  color: var(--text-light);
+  color: var(--gray);
   font-style: italic;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .homepage-container {
-    padding: 1rem;
-  }
-
+/* Responsive Design */
+@media (max-width: 992px) {
   .books-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
   }
 
   .book-card img {
     height: 200px;
   }
+}
+
+@media (max-width: 768px) {
+  .filter-controls,
+  .sort-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-controls input,
+  .sort-controls select {
+    width: 100%;
+  }
 
   .book-list-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .add-to-cart-btn {
+    margin-left: 0;
     width: 100%;
-    margin-top: 0.5rem;
-  }
-
-  .filter-controls,
-  .sort-controls {
-    padding: 1rem;
   }
 }
 
-/* Empty State */
-.section p:not(.loading-text) {
-  text-align: center;
-  padding: 2rem;
-  color: var(--text-light);
-  background-color: rgba(0, 0, 0, 0.02);
-  border-radius: var(--radius);
+@media (max-width: 576px) {
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+  }
+
+  .banner p {
+    font-size: 1rem;
+  }
+
+  .banner-section {
+    height: 50px;
+  }
 }

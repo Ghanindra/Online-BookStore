@@ -176,3 +176,4 @@ D:\BookStore\BookStore\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.KeyDer
 D:\BookStore\BookStore\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 D:\BookStore\BookStore\bin\Debug\net9.0\Microsoft.Extensions.Identity.Core.dll
 D:\BookStore\BookStore\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stores.dll
+D:\BookStore\BookStore\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
