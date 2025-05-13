@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "./login.css";
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = ({ setIsAuthenticated }) => {
@@ -54,7 +55,9 @@ console.log("userId",userId);
         <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
         <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
         <button type="submit">Login</button>
-      
+      <p>
+  Don't have an account? <Link to="/register">Register here</Link>
+</p>
       </form>
       <ToastContainer />
     </>

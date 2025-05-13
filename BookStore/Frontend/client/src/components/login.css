@@ -73,7 +73,7 @@
   
   /* Add a subtitle */
   .formed::after {
-    content: "Enter your credentials to access your account";
+    /* content: "Enter your credentials to access your account"; */
     display: block;
     font-size: 0.9rem;
     color: #64748b;

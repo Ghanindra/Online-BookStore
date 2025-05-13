@@ -8,7 +8,7 @@ const Register = () => {
     fullName: "",
     email: "",
     password: "",
-    isAdmin: false
+    // isAdmin: false
   });
   const navigate = useNavigate();
   const handleChange = e => {

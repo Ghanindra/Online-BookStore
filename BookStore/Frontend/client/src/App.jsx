@@ -14,6 +14,7 @@ import OrderHistory from "./components/OrderHistory"; // at top
 import StaffPortal from "./components/StaffPortal"; // at top
 import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer } from "react-toastify";
+
 // import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 // import { useNavigate } from 'react-router-dom';
@@ -56,6 +57,7 @@ function App() {
         <Route path="/book/:bookId" element={<RequireAuth><BookDetails /></RequireAuth>} />
         <Route path="/orderhistory" element={<RequireAuth><OrderHistory /></RequireAuth>} />
         <Route path="/staffportal" element={<RequireAuth><StaffPortal /></RequireAuth>} />
+      
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </Router>
