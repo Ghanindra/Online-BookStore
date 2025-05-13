@@ -52,3 +52,43 @@
   font-size: 24px;
   font-weight: bold;
 }
+/* Notifications Section */
+.notifications-section {
+  margin-top: 2rem;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.notifications-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+}
+
+.notifications-section ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.notifications-section li {
+  background-color: #f9f9f9;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #4CAF50;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #444;
+  transition: background-color 0.2s;
+}
+
+.notifications-section li:hover {
+  background-color: #eafbea;
+}

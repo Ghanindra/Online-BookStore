@@ -1,0 +1,115 @@
+.bookmarks {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.bookmarks__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #333;
+  text-align: center;
+}
+
+.bookmarks__error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.bookmarks__empty {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.1rem;
+  padding: 3rem 0;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+.bookmarks__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.bookmarks__item {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  background-color: white;
+}
+
+.bookmarks__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.bookmarks__book-info {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.bookmarks__book-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.bookmarks__book-author {
+  color: #4b5563;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.bookmarks__book-price {
+  font-weight: 600;
+  color: #047857;
+  font-size: 1.1rem;
+  margin-top: auto;
+}
+
+.bookmarks__book-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-top: 1px solid #e5e7eb;
+  order: -1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bookmarks__list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .bookmarks__title {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bookmarks__list {
+    grid-template-columns: 1fr;
+  }
+
+  .bookmarks__title {
+    font-size: 1.5rem;
+  }
+
+  .bookmarks {
+    padding: 1.5rem 0.75rem;
+  }
+}

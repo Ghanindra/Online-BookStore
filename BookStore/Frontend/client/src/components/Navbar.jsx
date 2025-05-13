@@ -59,6 +59,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
           {isAuthenticated && role === "User" && (
             <>
               <Link to="/orderhistory" className="navbar-cart">Order History</Link>
+              <Link to="/bookmarks" className="navbar-cart">Bookmarks</Link>
               <Link to="/cart" className="navbar-cart">
                 <FaShoppingCart size={20} />
                 {count > 0 && <span className="cart-badge">{count}</span>}

@@ -11,6 +11,7 @@ import EditBook from "./components/EditBook";
 import BookDetails from "./components/BookDetails";
 import BookCategory from "./components/BookCategory"; // at top
 import OrderHistory from "./components/OrderHistory"; // at top
+import Bookmarks from "./components/Bookmarks"; // at top
 import StaffPortal from "./components/StaffPortal"; // at top
 import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer } from "react-toastify";
@@ -56,6 +57,7 @@ function App() {
         <Route path="/admin/edit-book/:id" element={<RequireAuth><EditBook /></RequireAuth>} />
         <Route path="/book/:bookId" element={<RequireAuth><BookDetails /></RequireAuth>} />
         <Route path="/orderhistory" element={<RequireAuth><OrderHistory /></RequireAuth>} />
+        <Route path="/bookmarks" element={<RequireAuth><Bookmarks /></RequireAuth>} />
         <Route path="/staffportal" element={<RequireAuth><StaffPortal /></RequireAuth>} />
       
       </Routes>

@@ -37,6 +37,32 @@ namespace BookStore.Migrations
                     b.ToTable("BookOrder");
                 });
 
+            modelBuilder.Entity("BookStore.Models.Banner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
+                });
+
             modelBuilder.Entity("BookStore.Models.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -178,6 +204,26 @@ namespace BookStore.Migrations
                     b.ToTable("cartitems", (string)null);
                 });
 
+            modelBuilder.Entity("BookStore.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("BookStore.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -238,7 +284,7 @@ namespace BookStore.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderBook");
+                    b.ToTable("OrderBooks");
                 });
 
             modelBuilder.Entity("BookStore.Models.Review", b =>
